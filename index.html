@@ -1,0 +1,804 @@
+<!doctype html><html lang="vi"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<title>Canva tại Việt Nam 2026</title><link rel="preload" href="fonts/BVP-Regular.woff2" as="font" type="font/woff2" crossorigin><link rel="preload" href="fonts/BVP-Bold.woff2" as="font" type="font/woff2" crossorigin><link rel="preload" href="fonts/BVP-ExtraBold.woff2" as="font" type="font/woff2" crossorigin><style>@font-face{font-family:"BVP";font-weight:400;font-style:normal;font-display:block;src:url(fonts/BVP-Regular.woff2) format("woff2")}@font-face{font-family:"BVP";font-weight:700;font-style:normal;font-display:block;src:url(fonts/BVP-Bold.woff2) format("woff2")}@font-face{font-family:"BVP";font-weight:800;font-style:normal;font-display:block;src:url(fonts/BVP-ExtraBold.woff2) format("woff2")}:root{--night:#0B0920;--mut:#ABA5DA;--line:rgba(255,255,255,.13);--e:cubic-bezier(.16,1,.3,1);--io:cubic-bezier(.65,0,.35,1);--spring:cubic-bezier(.34,1.42,.64,1)}
+*{box-sizing:border-box;margin:0;padding:0}
+html,body{width:100%;height:100%;background:#000;overflow:hidden}
+body{font-family:"BVP",-apple-system,"Helvetica Neue",Arial,sans-serif;color:#fff;-webkit-font-smoothing:antialiased;-moz-osx-font-smoothing:grayscale;-webkit-user-select:none;user-select:none;cursor:default}
+body.idle{cursor:none}
+#stage{position:absolute;left:50%;top:50%;width:1920px;height:1080px;margin:-540px 0 0 -960px;transform:scale(var(--s,.5));transform-origin:50% 50%;overflow:hidden;background:var(--night);opacity:0;transition:opacity .6s ease}
+body.ready #stage{opacity:1}
+#loading{position:fixed;inset:0;display:flex;align-items:center;justify-content:center;color:rgba(255,255,255,.5);font:16px/1 -apple-system,Arial,sans-serif;transition:opacity .4s}
+body.ready #loading{opacity:0;pointer-events:none}
+
+/* ── slides & transitions ── */
+.slide{position:absolute;left:0;top:0;width:1920px;height:1080px;overflow:hidden;background:var(--night);opacity:0;visibility:hidden;transform:scale(.94);
+  transition:opacity .7s ease,transform 1.1s var(--e),visibility 0s linear 1.1s}
+.slide.cur{opacity:1;visibility:visible;transform:none;z-index:3;transition:opacity .85s ease .05s,transform 1.25s var(--e),visibility 0s}
+.slide.pre-f{visibility:visible;opacity:0;transform:scale(.93)}
+.slide.pre-b{visibility:visible;opacity:0;transform:scale(1.06)}
+.slide.out-f{visibility:visible;opacity:0;transform:scale(1.07);z-index:2;transition:opacity .6s ease,transform 1s cubic-bezier(.55,0,.8,.2),visibility 0s linear 1s}
+.slide.out-b{visibility:visible;opacity:0;transform:scale(.93);z-index:2;transition:opacity .5s ease,transform .9s cubic-bezier(.55,0,.8,.2),visibility 0s linear .9s}
+.notr,.notr *{transition:none !important}
+.bg{position:absolute;inset:0;overflow:hidden}
+.orb{position:absolute;border-radius:50%;pointer-events:none;animation:drift var(--od,22s) ease-in-out infinite alternate}
+@keyframes drift{from{transform:translate3d(-30px,20px,0) scale(1)}to{transform:translate3d(50px,-40px,0) scale(1.1)}}
+.flt{position:absolute;animation:flt var(--fd,6s) ease-in-out var(--fdl,0s) infinite alternate}
+.flt>img{display:block}
+@keyframes flt{from{transform:translate3d(0,8px,0)}to{transform:translate3d(0,-14px,0)}}
+.slide:not(.cur) .orb,.slide:not(.cur) .flt{animation-play-state:paused}
+img{display:block;-webkit-user-drag:none}
+.ic{display:block;flex:none}
+
+/* ── build effects (transform + opacity only) ── */
+.fx{transition:opacity .8s ease,transform 1.1s var(--e)}
+.fx-rise{opacity:0;transform:translate3d(0,46px,0)}
+.fx-up{opacity:0;transform:translate3d(0,20px,0);transition:opacity .6s ease,transform .9s var(--e)}
+.fx-left{opacity:0;transform:translate3d(-70px,0,0)}
+.fx-fade{opacity:0;transition:opacity 1s ease}
+.fx-zoom{opacity:0;transform:scale(1.22);transition:opacity 1s ease,transform 1.6s var(--e)}
+.fx-pop{opacity:0;transform:translate3d(0,50px,0) scale(.55);transition:opacity .55s ease,transform 1.2s var(--spring)}
+.fx-sweep{opacity:0;transform:translate3d(220px,-60px,0) scale(.92);transition:opacity 1.4s ease,transform 2.2s var(--e)}
+.fx-draw{transform:scaleX(0);transform-origin:0 50%;transition:transform 1.4s var(--io)}
+.fx-wipe{opacity:0;-webkit-clip-path:inset(0 100% 0 0);clip-path:inset(0 100% 0 0);transition:opacity .2s linear,-webkit-clip-path 1.5s var(--io),clip-path 1.5s var(--io)}
+.fx-mask{opacity:1}
+.fx-mask .w{display:inline-block;overflow:hidden;vertical-align:top;padding:.24em .06em .14em;margin:-.24em -.06em -.14em}
+.fx-mask .w>i{display:inline-block;font-style:normal;transform:translate3d(0,112%,0);transition:transform 1.15s var(--e)}
+.slide .fx.on{opacity:1;transform:none}
+.slide .fx-wipe.on{-webkit-clip-path:inset(0 0 0 0);clip-path:inset(0 0 0 0)}
+.fx-mask.on .w>i{transform:none}
+.mm-wait{visibility:hidden !important;transition:none !important}
+#mm{position:absolute;inset:0;z-index:10;pointer-events:none}
+#mm>*{position:absolute !important;margin:0 !important;transform-origin:0 0}
+
+/* ── Canva selection frame ── */
+.selbox{position:absolute;border:3px solid #A07BFF;border-radius:10px;box-shadow:0 0 30px rgba(160,123,255,.35)}
+.selbox.fx{opacity:0;transform:scale(1.035);transition:opacity .45s ease,transform .8s var(--e)}
+.handle{position:absolute;width:18px;height:18px;background:#fff;border:3px solid #A07BFF;border-radius:5px}
+.handle.fx{opacity:0;transform:scale(0);transition:opacity .25s ease,transform .6s var(--spring)}
+.cursor{position:absolute;overflow:visible}
+.cursor.fx{opacity:0;transform:translate3d(-170px,-120px,0);transition:opacity .35s ease,transform 1.25s var(--e)}
+.ctag{position:absolute;background:#7D2AE8;border-radius:22px;padding:7px 18px;font-size:20px;line-height:28px;font-weight:700;color:#fff;white-space:nowrap;box-shadow:0 8px 24px rgba(0,0,0,.3)}
+.ctag.fx{opacity:0;transform:scale(.3);transform-origin:0 0;transition:opacity .25s ease,transform .65s var(--spring)}
+
+/* ── type ── */
+.h1{font-weight:800;font-size:72px;line-height:1.12;letter-spacing:-.028em}
+.lead{font-size:30px;line-height:1.45;color:var(--mut)}
+.h3{font-size:34px;line-height:1.25;font-weight:800;letter-spacing:-.01em}
+.h4{font-size:30px;line-height:1.3;font-weight:700}
+.p{font-size:26px;line-height:1.45;color:var(--mut)}
+.pw{font-size:26px;line-height:1.45;color:#fff}
+.k{font-size:22px;line-height:1.4;color:var(--mut)}
+.v{font-size:30px;line-height:1.3;font-weight:700;margin-top:4px}
+.src{position:absolute;left:140px;bottom:44px;width:1640px;font-size:20px;line-height:1.4;color:rgba(171,165,218,.7)}
+.hair{border-top:1.5px solid var(--line)}
+.vline{border-left:1.5px solid var(--line);padding-left:40px}
+.glass{background:rgba(255,255,255,.055);border:1.5px solid rgba(255,255,255,.11);border-radius:28px}
+.grad{background:linear-gradient(135deg,#00C4CC 0%,#5A32FA 55%,#7D2AE8 100%)}
+[data-grad]{background:linear-gradient(135deg,#00C4CC,#5A32FA)}
+.dot{display:flex;align-items:center;justify-content:center;border-radius:50%;flex:none}
+.pill{display:inline-flex;align-items:center;border-radius:999px;padding:10px 26px;font-size:22px;line-height:1.3;font-weight:700;white-space:nowrap}
+.count{font-variant-numeric:tabular-nums}
+
+/* ── slide-specific ── */
+.cover-t{font-weight:800;font-size:96px;line-height:1.1;letter-spacing:-.03em}
+.cover-s{font-size:34px;line-height:1.4;color:#D9D4FA}
+.ticket{display:flex;align-items:center;gap:30px;padding:0 32px;background:rgba(255,255,255,.08)}
+.tk-t{font-size:32px;line-height:1.3;font-weight:800;margin:2px 0}
+.hint{position:absolute;left:0;right:0;bottom:46px;text-align:center;font-size:20px;color:rgba(255,255,255,.55);transition:opacity .6s ease}
+body.started .hint{opacity:0}
+.ag-n{font-size:250px;line-height:.95;font-weight:800;letter-spacing:-.05em}
+.agenda-col{border-top:1.5px solid var(--line);padding-top:40px}
+.div-n{position:absolute;font-size:440px;line-height:1;font-weight:800;letter-spacing:-.05em;color:transparent;-webkit-text-stroke:3px rgba(255,255,255,.55)}
+.div-t{font-weight:800;font-size:140px;line-height:1.05;letter-spacing:-.035em}
+.div-s{font-size:36px;line-height:1.4;color:#E1DCFF}
+.fact{padding:16px 0 18px}
+.tile{border-radius:28px;padding:32px 30px}
+.hero{font-size:200px;line-height:1;font-weight:800;letter-spacing:-.045em;text-shadow:0 0 90px rgba(90,50,250,.65)}
+.side{padding:20px 0 24px}
+.side-n{font-size:60px;line-height:1.1;font-weight:800;letter-spacing:-.02em;margin-bottom:6px}
+.bar{border-radius:0 28px 28px 0}
+.bar-a{background:linear-gradient(90deg,rgba(90,50,250,.45),rgba(125,42,232,.7))}
+.bar-b{background:linear-gradient(90deg,#00C4CC,#5A32FA 60%,#9B4BFF);box-shadow:0 0 40px rgba(90,50,250,.5)}
+.bar-l{font-size:28px;line-height:60px;font-weight:700;color:var(--mut)}
+.bar-v{font-size:34px;line-height:52px;font-weight:800}
+.vn-col{padding-top:34px}
+.unit{font-size:.5em;letter-spacing:-.01em}
+.vn-n{font-size:112px;line-height:1.05;font-weight:800;letter-spacing:-.04em;margin-bottom:12px}
+.quote{display:flex;align-items:center;gap:36px;padding:0 48px}
+.q-t{font-size:34px;line-height:1.35;font-weight:700}
+.panel{border-radius:40px;box-shadow:0 30px 80px rgba(60,30,200,.45)}
+.ndot{background:#FFD400;color:#17134A;font-size:26px;font-weight:800}
+.prow{display:flex;gap:28px;padding:22px 0}
+.chip{padding:16px}
+.sw{height:300px;border-radius:20px;padding:24px 22px}
+.sw-n{font-size:34px;line-height:1.3;font-weight:800}
+.sw-h{font-size:24px;line-height:1.4}
+.core{border-radius:32px}
+.core-t{font-size:30px;line-height:1.3;font-weight:800}
+.core-t span{display:block;font-size:24px;font-weight:400;margin-top:6px}
+.rules{display:flex;gap:40px}
+.rules>div{flex:1}
+.rl{display:flex;gap:14px;align-items:center;margin-top:14px;font-size:26px;line-height:1.35}
+.gline{background:linear-gradient(90deg,#00C4CC,#5A32FA 55%,#B04BE8);border-radius:2px}
+.era-y{font-size:128px;line-height:1.05;font-weight:800;letter-spacing:-.045em}
+.era-dot{border-radius:50%;border:6px solid var(--night);box-shadow:0 0 0 2px rgba(255,255,255,.25)}
+.ms .stem{position:absolute;width:2px;height:78px;background:rgba(255,255,255,.18)}
+.node{position:absolute;display:inline-block;width:26px;height:26px;border-radius:50%;background:var(--night);border:5px solid #9DB4FF}
+.node.vn{width:34px;height:34px;background:#7D2AE8;border:6px solid #FFD400;box-shadow:0 0 24px rgba(255,212,0,.45)}
+.ms-d{position:absolute;left:0;width:300px;text-align:center;font-size:28px;line-height:1.3;font-weight:800}
+.ms-t{position:absolute;left:0;width:300px;text-align:center;font-size:23px;line-height:1.4;color:#E4E0FF}
+.legend{display:flex;gap:44px;font-size:24px;color:var(--mut)}
+.legend span{display:flex;align-items:center;gap:14px}
+.pillar{padding:40px 38px}
+.list{margin-top:32px;padding-left:30px;font-size:26px;line-height:1.45;color:#E4E0FF}
+.list li{margin-bottom:12px}
+.list li::marker{color:#9B6BFF}
+.lever{background:rgba(155,107,255,.16);border:1.5px solid rgba(155,107,255,.4);color:#fff;font-size:24px}
+.evcard{border-radius:40px;padding:200px 50px 0;background:linear-gradient(160deg,#7D2AE8 0%,#5A32FA 55%,#00C4CC 100%);box-shadow:0 30px 90px rgba(90,50,250,.45)}
+.ev-t{font-size:80px;line-height:1.1;font-weight:800;letter-spacing:-.03em;margin:6px 0 26px}
+.ev-r{display:flex;gap:18px;align-items:flex-start;font-size:26px;line-height:1.4;margin-bottom:18px}
+.ev-r .ic{margin-top:3px}
+.ann{display:flex;gap:22px;padding:26px 0}
+.press{padding:32px 40px}
+.stat{padding-top:6px}
+.st-n{font-size:104px;line-height:1.05;font-weight:800;letter-spacing:-.04em;margin-bottom:10px}
+.li1{font-size:26px;line-height:1.45;color:#E4E0FF;padding-left:34px;position:relative}
+.li1::before{content:"";position:absolute;left:4px;top:15px;width:12px;height:12px;border-radius:50%;background:#9B6BFF}
+.insight{border-radius:36px;padding:40px 46px;box-shadow:0 30px 80px rgba(60,30,200,.45)}
+.ins-t{font-size:32px;line-height:1.42;font-weight:700;margin-top:10px}
+.t3{padding:32px 34px}
+.sticky{background:#FFD400;border-radius:26px;padding:60px 46px;box-shadow:0 30px 70px rgba(0,0,0,.4);color:#17134A}
+.sk-p{font-size:26px;line-height:1.45;margin-top:26px}
+.pro{}
+.glowdot{box-shadow:0 0 40px var(--gc)}
+.weak{display:flex;align-items:center;gap:26px;padding:0 34px;border-radius:24px;background:rgba(255,107,61,.12);border:1.5px solid rgba(255,138,92,.4);font-size:26px;line-height:1.4;font-weight:700}
+.cons{display:flex;align-items:center;padding:0 36px;border-radius:24px;font-size:26px;line-height:1.4;color:#E4E0FF}
+.warrow{display:flex;align-items:center;justify-content:center}
+.thanks{font-weight:800;font-size:300px;line-height:1.05;letter-spacing:-.045em}
+.thx-q{font-size:40px;line-height:1.4;color:#EAE6FF}
+.refs ol{padding-left:44px;font-size:22px;line-height:1.42;color:#E4E0FF}
+.refs li{margin-bottom:12px}
+.refs li::marker{color:var(--mut)}
+
+/* ── HUD ── */
+#hud{position:fixed;left:50%;bottom:22px;transform:translateX(-50%);z-index:20;display:flex;align-items:center;gap:4px;padding:6px;border-radius:999px;background:rgba(24,20,60,.78);-webkit-backdrop-filter:blur(16px);backdrop-filter:blur(16px);color:#fff;font:15px/1 "BVP",-apple-system,sans-serif;opacity:0;transition:opacity .3s ease;pointer-events:none}
+#hud.show{opacity:1;pointer-events:auto}
+#hud button{all:unset;cursor:pointer;width:38px;height:38px;border-radius:50%;display:flex;align-items:center;justify-content:center}
+#hud button:hover{background:rgba(255,255,255,.14)}
+#hud button:focus-visible{outline:2px solid #00C4CC;outline-offset:2px}
+#hudN{min-width:72px;text-align:center;font-variant-numeric:tabular-nums}
+#bar{position:fixed;left:0;bottom:0;height:3px;z-index:21;width:0;background:linear-gradient(90deg,#00C4CC,#5A32FA,#B04BE8);opacity:0;transition:width .5s var(--io),opacity .3s}
+#bar.show{opacity:1}
+#black{position:fixed;inset:0;background:#000;z-index:30;opacity:0;pointer-events:none;transition:opacity .5s ease}
+#black.show{opacity:1}
+
+@media (prefers-reduced-motion: reduce){
+  .fx,.fx-mask .w>i,.slide{transform:none !important;transition:opacity .35s ease !important}
+  .fx-mask .w>i{transition:none !important}
+  .orb,.flt{animation:none !important}
+}
+/* static print / PDF mode */
+body.print{overflow:visible;height:auto;background:var(--night)}
+body.print #stage{transition:none;position:static;margin:0;transform:none;height:auto;opacity:1;overflow:visible}
+body.print .slide{position:relative;opacity:1;visibility:visible;transform:none;break-after:page}
+body.print .slide:last-of-type{break-after:auto}
+body.print .fx,body.print .fx-mask .w>i{opacity:1 !important;transform:none !important;-webkit-clip-path:none !important;clip-path:none !important;transition:none !important}
+body.print .hint,body.print #hud,body.print #bar,body.print #loading{display:none}
+@page{size:1920px 1080px;margin:0}
+
+/* ───────── minigame ───────── */
+.g-tag{display:inline-flex;align-items:center;gap:10px;padding:10px 26px 10px 18px;border-radius:999px;background:#FFD400;color:#17134A;font-size:24px;line-height:1.3;font-weight:800;white-space:nowrap}
+.g-title{font-weight:800;font-size:108px;line-height:1.05;letter-spacing:-.035em}
+.g-step{display:flex;align-items:center;gap:26px}
+.g-count{display:flex;align-items:center;gap:20px}
+.g-count b{font-size:100px;line-height:1;font-weight:800;color:#36E0E6;font-variant-numeric:tabular-nums;letter-spacing:-.03em}
+.g-count span{font-size:22px;line-height:1.35;color:var(--mut)}
+.g-n.bump{animation:gBump .5s var(--spring)}
+@keyframes gBump{from{transform:scale(1.25)}to{transform:none}}
+.g-chips{display:flex;flex-wrap:wrap;align-content:flex-start;gap:10px;overflow:hidden}
+.g-chip{padding:8px 20px;border-radius:999px;background:rgba(255,255,255,.08);border:1.5px solid rgba(255,255,255,.14);font-size:22px;line-height:1.3;font-weight:700;white-space:nowrap;max-width:300px;overflow:hidden;text-overflow:ellipsis}
+.g-chip.new{animation:gChip .8s var(--spring) both}
+@keyframes gChip{from{opacity:0;transform:translate3d(0,24px,0) scale(.5)}to{opacity:1;transform:none}}
+.g-qrcard{background:#fff;border-radius:44px;box-shadow:0 40px 120px rgba(90,50,250,.5);display:flex;flex-direction:column;align-items:center;padding:40px 40px 0}
+.g-qr{width:480px;height:480px;display:flex;align-items:center;justify-content:center}
+.g-qr svg{width:100%;height:100%;display:block}
+.g-qr .off{color:#6B6790;font-size:26px;line-height:1.45;text-align:center;font-weight:700}
+.g-url{margin-top:30px;color:#17134A;font-size:30px;line-height:1.3;font-weight:800;text-align:center;max-width:480px;word-break:break-all}
+.g-scan{display:flex;align-items:center;gap:10px;margin-top:14px;color:#5A32FA;font-size:22px;font-weight:700}
+
+.g-status{display:flex;align-items:center;gap:14px;padding:12px 28px 12px 22px;border-radius:999px;background:rgba(255,255,255,.07);border:1.5px solid rgba(255,255,255,.13);font-size:22px;line-height:1.3;font-weight:700;white-space:nowrap}
+.g-status i{position:relative;width:14px;height:14px;border-radius:50%;background:var(--sc,#ABA5DA)}
+.g-status i::after{content:"";position:absolute;inset:0;border-radius:50%;background:var(--sc,#ABA5DA);opacity:0}
+.g-status[data-s="open"]{--sc:#36E0E6}.g-status[data-s="open"] i::after{animation:gPing 1.2s ease-out infinite}
+.g-status[data-s="buzz"]{--sc:#FFD400}.g-status[data-s="right"]{--sc:#3EE08F}.g-status[data-s="wrong"]{--sc:#FF5C5C}.g-status[data-s="off"]{--sc:#77738F}
+@keyframes gPing{from{opacity:.8;transform:scale(1)}to{opacity:0;transform:scale(3)}}
+
+.g-q{font-weight:800;font-size:60px;line-height:1.2;letter-spacing:-.02em}
+.g-opt{display:flex;align-items:center;gap:28px;padding:0 30px 0 34px;border-radius:30px;background-color:rgba(255,255,255,.055);border:2px solid rgba(255,255,255,.12);
+  transition:opacity .8s ease,transform 1.1s var(--e),background-color .35s ease,border-color .35s ease}
+.g-l{width:84px;height:84px;flex:none;border-radius:50%;display:flex;align-items:center;justify-content:center;background:rgba(255,255,255,.1);font-size:38px;font-weight:800;transition:background-color .35s ease,color .35s ease}
+.g-ot{flex:1;font-size:36px;line-height:1.25;font-weight:700}
+.g-mk{width:64px;height:64px;flex:none;border-radius:50%;display:none;align-items:center;justify-content:center;opacity:0;transform:scale(.3);transition:opacity .3s ease,transform .6s var(--spring)}
+.g-mk-x{background:#FF4D4D}.g-mk-v{background:#22C77A}
+.g-opt.wrong .g-mk-x,.g-opt.right .g-mk-v{display:flex}
+.g-opt.wrong.mk .g-mk-x,.g-opt.right.mk .g-mk-v{opacity:1;transform:none}
+.g-opt.wrong{border-color:rgba(255,92,92,.75);background-color:rgba(255,77,77,.1)}
+.g-opt.wrong .g-l{background:#FF4D4D}
+.g-opt.wrong .g-ot{color:rgba(255,255,255,.55)}
+.g-opt.right{border-color:#3EE08F;background-color:rgba(34,199,122,.2)}
+.g-opt.right .g-l{background:#22C77A}
+.slide .g-opt.fx.on.dim{opacity:.3}
+.g-opt.shake{animation:gShake .55s ease}
+@keyframes gShake{0%,100%{transform:none}15%{transform:translate3d(-16px,0,0)}30%{transform:translate3d(14px,0,0)}45%{transform:translate3d(-10px,0,0)}60%{transform:translate3d(8px,0,0)}75%{transform:translate3d(-4px,0,0)}}
+.g-opt.glow{animation:gGlow 1.6s ease 2}
+@keyframes gGlow{0%,100%{transform:none}30%{transform:scale(1.035)}}
+.slide.g-judge .g-opt:not(.wrong){cursor:pointer}
+.slide.g-judge .g-opt:not(.wrong):hover{border-color:#fff;background-color:rgba(255,255,255,.12)}
+
+.g-banner{display:flex;align-items:center;gap:40px;padding:0 50px 0 34px}
+.gb-bell{position:relative;width:132px;height:132px;flex:none;border-radius:50%;background:rgba(255,255,255,.1);transition:background-color .4s ease}
+.gb-ic{position:absolute;inset:0;display:flex;align-items:center;justify-content:center;transform-origin:50% 22%}
+.gb-ring{position:absolute;inset:0;border-radius:50%;border:4px solid #36E0E6;opacity:0}
+.g-banner[data-m="open"] .gb-bell{background:#00A8B0}
+.g-banner[data-m="open"] .gb-ring{animation:gRing 1.6s ease-out infinite}
+.g-banner[data-m="open"] .gb-ring.r2{animation-delay:.8s}
+.g-banner[data-m="buzz"] .gb-bell{background:#F2A900}
+.g-banner[data-m="buzz"] .gb-ic{animation:gSwing .42s ease-in-out infinite alternate}
+.g-banner[data-m="right"] .gb-bell{background:#22C77A}
+.g-banner[data-m="wrong"] .gb-bell{background:#E83C3C}
+.g-banner[data-m="reveal"] .gb-bell{background:#5A32FA}
+@keyframes gRing{from{opacity:.85;transform:scale(1)}to{opacity:0;transform:scale(1.75)}}
+@keyframes gSwing{from{transform:rotate(-16deg)}to{transform:rotate(16deg)}}
+.gb-body{flex:1;min-width:0;height:200px;display:flex;flex-direction:column;justify-content:center;overflow:hidden}
+.gb-in.swap{animation:gIn .7s var(--e) both}
+@keyframes gIn{from{opacity:0;transform:translate3d(0,40px,0)}to{opacity:1;transform:none}}
+.gb-k{font-size:24px;line-height:1.3;font-weight:700;color:var(--mut);letter-spacing:.02em}
+.gb-v{font-size:78px;line-height:1.12;font-weight:800;letter-spacing:-.02em;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;padding-bottom:4px}
+.gb-v.num{color:#FFD400;font-variant-numeric:tabular-nums}
+.gb-v.strike{text-decoration:line-through;text-decoration-color:#FF5C5C;-webkit-text-decoration-color:#FF5C5C;text-decoration-thickness:7px;color:rgba(255,255,255,.7)}
+.gb-v.tick{animation:gBump .45s var(--spring)}
+.gb-side{max-width:520px;text-align:right;font-size:22px;line-height:1.45;color:var(--mut)}
+.gb-side b{color:#FF8A8A;font-weight:700}
+
+.g-stamp{position:absolute;left:960px;top:590px;width:0;height:0;z-index:8;pointer-events:none}
+.g-stamp span{position:absolute;left:0;top:0;opacity:0;white-space:nowrap;font-weight:800;font-size:170px;line-height:1;letter-spacing:-.03em;padding:22px 64px 34px;border:12px solid currentColor;border-radius:44px;background:rgba(11,9,32,.88);transform:translate3d(-50%,-50%,0) scale(2.2) rotate(-8deg)}
+.g-stamp.wrong span{color:#FF5C5C}.g-stamp.right span{color:#3EE08F}
+.g-stamp.show span{animation:gStamp 2.1s var(--e) forwards}
+@keyframes gStamp{0%{opacity:0;transform:translate3d(-50%,-50%,0) scale(2.2) rotate(-8deg)}14%{opacity:1;transform:translate3d(-50%,-50%,0) scale(.94) rotate(-8deg)}22%{transform:translate3d(-50%,-50%,0) scale(1) rotate(-8deg)}80%{opacity:1;transform:translate3d(-50%,-50%,0) scale(1) rotate(-8deg)}100%{opacity:0;transform:translate3d(-50%,-50%,0) scale(1.06) rotate(-8deg)}}
+.g-fx{position:absolute;inset:0;z-index:7;pointer-events:none;overflow:hidden}
+.g-cf{position:absolute;left:960px;top:620px;width:16px;height:28px;border-radius:4px;opacity:0}
+
+.g-row{display:flex;align-items:center;gap:40px;padding:0 50px}
+.g-rn{width:130px;flex:none;font-size:28px;font-weight:800;color:#36E0E6}
+.g-rq{flex:1;min-width:0;font-size:24px;line-height:1.45;color:var(--mut);display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden}
+.g-rw{width:600px;flex:none;display:flex;align-items:center;justify-content:flex-end;gap:18px}
+.g-rwn{font-size:26px;line-height:1.2;font-weight:700;color:rgba(255,255,255,.4);text-align:right;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.g-rw.won .g-rwn{font-size:56px;font-weight:800;color:#FFD400;letter-spacing:-.02em}
+.g-rw .ic{display:none}.g-rw.won .ic{display:block}
+.g-rw.pop{animation:gChip .9s var(--spring) both}
+
+#gpanel{position:fixed;right:22px;bottom:22px;z-index:21;display:none;flex-wrap:wrap;align-items:center;justify-content:flex-end;gap:4px;max-width:640px;padding:6px;border-radius:20px;background:rgba(24,20,60,.86);-webkit-backdrop-filter:blur(16px);backdrop-filter:blur(16px);color:#fff;font:13px/1.2 "BVP",-apple-system,sans-serif;opacity:0;transition:opacity .3s ease;pointer-events:none}
+body.g-on #gpanel{display:flex}
+#gpanel.show{opacity:1;pointer-events:auto}
+#gpanel button{all:unset;cursor:pointer;display:flex;align-items:center;gap:7px;padding:9px 13px;border-radius:13px;white-space:nowrap}
+#gpanel button:hover{background:rgba(255,255,255,.14)}
+#gpanel button:focus-visible{outline:2px solid #00C4CC}
+#gpanel button.gp-danger.arm{background:#E83C3C}
+#gpanel button.muted{opacity:.45}
+.gp-st{display:flex;align-items:center;gap:8px;padding:0 10px;color:rgba(255,255,255,.75)}
+.gp-st i{width:9px;height:9px;border-radius:50%;background:#77738F}
+.gp-st.ok i{background:#3EE08F}.gp-st.bad i{background:#FF5C5C}.gp-st.warn i{background:#FFD400}
+.gp-hint{flex-basis:100%;padding:4px 10px 6px;color:#FFD400;text-align:right}
+.gp-hint:empty{display:none}
+body.print #gpanel{display:none}
+</style></head>
+<body><div id="stage"><section class="slide cover"  ><div class="bg"><div class="orb" style="left:500px;top:-490px;width:1500px;height:1500px;background:radial-gradient(closest-side, rgba(125,42,232,0.75) 0%, rgba(125,42,232,0.33) 45%, rgba(125,42,232,0) 100%);--od:22s"></div><div class="orb" style="left:1200px;top:430px;width:1100px;height:1100px;background:radial-gradient(closest-side, rgba(0,196,204,0.5625) 0%, rgba(0,196,204,0.24750000000000003) 45%, rgba(0,196,204,0) 100%);--od:26s"></div><div class="orb" style="left:-380px;top:480px;width:1200px;height:1200px;background:radial-gradient(closest-side, rgba(90,50,250,0.625) 0%, rgba(90,50,250,0.275) 45%, rgba(90,50,250,0) 100%);--od:30s"></div></div>
+  <img data-b="1" class="fx fx-sweep " data-a="ribbon" alt=""  style="position:absolute;left:600px;top:-90px;width:1400px">
+  <div class="flt" style="position:absolute;left:660px;top:10px;width:250px;--fd:5.0s;--fdl:-2.0s"><img data-b="1" class="fx fx-pop " data-a="racket" alt=""  style="width:100%"></div><div class="flt" style="position:absolute;left:935px;top:80px;width:180px;--fd:5.5s;--fdl:-1.5s"><img data-b="1" class="fx fx-pop " data-a="gamepad" alt=""  style="width:100%"></div><div class="flt" style="position:absolute;left:1140px;top:110px;width:150px;--fd:5.0s;--fdl:0.0s"><img data-b="1" class="fx fx-pop " data-a="aa" alt=""  style="width:100%"></div>
+  <div class="flt" style="position:absolute;left:1325px;top:50px;width:238px;--fd:5.5s;--fdl:-2.5s"><img data-b="1" class="fx fx-pop " data-a="clapper" alt=""  style="width:100%"></div><div class="flt" style="position:absolute;left:1565px;top:210px;width:144px;--fd:5.5s;--fdl:-2.5s"><img data-b="1" class="fx fx-pop " data-a="aperture" alt=""  style="width:100%"></div><div class="flt" style="position:absolute;left:1660px;top:400px;width:108px;--fd:6.0s;--fdl:-1.0s"><img data-b="1" class="fx fx-pop " data-a="star" alt=""  style="width:100%"></div>
+  <div class="flt" style="position:absolute;left:1205px;top:440px;width:137px;--fd:5.5s;--fdl:-4.5s"><img data-b="1" class="fx fx-pop " data-a="plane" alt=""  style="width:100%"></div><div class="flt" style="position:absolute;left:1305px;top:440px;width:317px;--fd:6.5s;--fdl:-4.5s"><img data-b="1" class="fx fx-pop " data-a="vr" alt=""  style="width:100%"></div><div class="flt" style="position:absolute;left:1350px;top:628px;width:310px;--fd:7.4s;--fdl:-2.8s"><img data-b="1" class="fx fx-pop " data-a="csphere" alt=""  style="width:100%"></div><div class="flt" style="position:absolute;left:1675px;top:888px;width:230px;--fd:6.9s;--fdl:-1.3s"><img data-b="1" class="fx fx-pop " data-a="coinblur" alt=""  style="width:100%"></div>
+  <img data-b="1" class="fx fx-rise " data-a="wordmark" alt=""  style="position:absolute;left:140px;top:96px;width:240px">
+  <div data-b="1" class="fx fx-mask cover-t" style="position:absolute;left:140px;top:290px;width:1200px"><span class="w"><i>Chiến</i></span> <span class="w"><i>lược</i></span> <span class="w"><i>quảng</i></span> <span class="w"><i>cáo</i></span><br><span class="w"><i>của</i></span> <span class="w"><i>Canva</i></span> <span class="w"><i>tại</i></span> <span class="w"><i>Việt</i></span> <span class="w"><i>Nam</i></span></div>
+  <div data-b="1" class="fx fx-rise cover-s" style="position:absolute;left:140px;top:530px;width:1100px" >Từ đầu năm 2026 đến nay: phân tích chiến lược quảng cáo</div>
+  <div data-b="2" class="fx fx-rise glass ticket" style="position:absolute;left:140px;top:780px;width:820px;height:150px" ><div class="dot" style="width:84px;height:84px;background:#7D2AE8"><svg class="ic" stroke="currentColor" fill="none" stroke-width="2" viewBox="0 0 24 24" stroke-linecap="round" stroke-linejoin="round" color="#fff" style="color:#fff" height="42" width="42" xmlns="http://www.w3.org/2000/svg"><path d="M2 9a3 3 0 0 1 0 6v2a2 2 0 0 0 2 2h16a2 2 0 0 0 2-2v-2a3 3 0 0 1 0-6V7a2 2 0 0 0-2-2H4a2 2 0 0 0-2 2Z"></path><path d="M13 5v2"></path><path d="M13 17v2"></path><path d="M13 11v2"></path></svg></div>
+     <div><div class="k">Mô phỏng sự kiện ra mắt Canva Vietnam</div><div class="tk-t">“Phường A.I Đồ”, 24.04.2026</div><div class="k">Thủ Thiêm Riverstage, TP.HCM</div></div></div>
+  <div data-b="2" class="fx selp selbox" style="position:absolute;left:128px;top:768px;width:844px;height:174px"></div><div data-b="2" class="fx selp handle" style="left:119px;top:759px"></div><div data-b="2" class="fx selp handle" style="left:963px;top:759px"></div><div data-b="2" class="fx selp handle" style="left:119px;top:933px"></div><div data-b="2" class="fx selp handle" style="left:963px;top:933px"></div>
+  <svg data-b="2" class="fx selp cursor" style="left:938px;top:922px" width="38" height="38" viewBox="0 0 24 24"><path d="M4 2 L20 11 L12.5 13 L9 21 Z" fill="#7D2AE8" stroke="#fff" stroke-width="1.6" stroke-linejoin="round"/></svg>
+  <div data-b="2" class="fx selp ctag" style="left:968px;top:952px">Business proposal</div>
+  <div class="hint">Bấm chuột hoặc nhấn phím mũi tên để bắt đầu. Nhấn F để xem toàn màn hình.</div>
+</section>
+<section class="slide "  ><div class="bg"><div class="orb" style="left:950px;top:-420px;width:1200px;height:1200px;background:radial-gradient(closest-side, rgba(125,42,232,0.5) 0%, rgba(125,42,232,0.22000000000000003) 45%, rgba(125,42,232,0) 100%);--od:22s"></div><div class="orb" style="left:-250px;top:450px;width:1000px;height:1000px;background:radial-gradient(closest-side, rgba(0,196,204,0.35000000000000003) 0%, rgba(0,196,204,0.15400000000000003) 45%, rgba(0,196,204,0) 100%);--od:28s"></div></div>
+  <div data-b="0" class="fx fx-mask h1" style="position:absolute;left:140px;top:104px;width:1640px"><span class="w"><i>Hai</i></span> <span class="w"><i>phần,</i></span> <span class="w"><i>một</i></span> <span class="w"><i>câu</i></span> <span class="w"><i>chuyện</i></span></div><div data-b="0" class="fx fx-rise lead" style="position:absolute;left:140px;top:204px;width:1640px" >Từ thương hiệu toàn cầu đến chiến lược quảng cáo tại Việt Nam</div>
+  <div data-b="1" class="fx fx-rise agenda-col" style="position:absolute;left:140px;top:380px;width:760px" ><div class="ag-n" data-key="n01" style="color:#00C4CC">01</div><div class="h3" style="margin-top:22px">Gặp gỡ Canva</div>
+     <div class="p" style="margin-top:12px">Doanh nghiệp, quy mô, phân tích logo và các dấu mốc</div><div class="pill" style="margin-top:30px;border:2px solid #00C4CC;color:#00C4CC">Experience Zone</div></div>
+  <div data-b="1" class="fx fx-rise agenda-col" style="position:absolute;left:1000px;top:380px;width:780px" ><div class="ag-n" style="color:#9B6BFF">02</div><div class="h3" style="margin-top:22px">Chiến lược quảng cáo tại Việt Nam</div>
+     <div class="p" style="margin-top:12px">Định hướng 2026, ba chiến dịch nổi bật, ưu điểm và nhược điểm</div><div class="pill" style="margin-top:30px;border:2px solid #9B6BFF;color:#B99BFF">Seminar Zone</div></div>
+  <div class="flt" style="position:absolute;left:1650px;top:96px;width:160px;--fd:6.8s;--fdl:-4.6s"><img data-b="0" class="fx fx-pop " data-a="gamepad" alt=""  style="width:100%"></div>
+</section>
+<section class="slide divider"  ><div class="bg"><div class="orb" style="left:750px;top:-280px;width:1400px;height:1400px;background:radial-gradient(closest-side, rgba(0,196,204,0.525) 0%, rgba(0,196,204,0.231) 45%, rgba(0,196,204,0) 100%);--od:22s"></div><div class="orb" style="left:-100px;top:430px;width:1100px;height:1100px;background:radial-gradient(closest-side, rgba(90,50,250,0.5625) 0%, rgba(90,50,250,0.24750000000000003) 45%, rgba(90,50,250,0) 100%);--od:28s"></div><div class="orb" style="left:1400px;top:-450px;width:900px;height:900px;background:radial-gradient(closest-side, rgba(125,42,232,0.5) 0%, rgba(125,42,232,0.22000000000000003) 45%, rgba(125,42,232,0) 100%);--od:24s"></div></div>
+  <div data-b="0" class="fx fx-zoom div-n" data-key="n01" style="left:120px;top:40px">01</div>
+  <div class="flt" style="position:absolute;left:1200px;top:150px;width:540px;--fd:5.0s;--fdl:0.0s"><img data-b="0" class="fx fx-pop " data-a="csphere" alt=""  style="width:100%"></div><div class="flt" style="position:absolute;left:1130px;top:110px;width:130px;--fd:7.0s;--fdl:-4.0s"><img data-b="0" class="fx fx-pop " data-a="star" alt=""  style="width:100%"></div><div class="flt" style="position:absolute;left:1700px;top:740px;width:150px;--fd:7.0s;--fdl:-4.0s"><img data-b="0" class="fx fx-pop " data-a="coin" alt=""  style="width:100%"></div>
+  <div data-b="0" class="fx fx-mask div-t" style="position:absolute;left:140px;top:560px;width:1500px;font-size:140px"><span class="w"><i>Gặp</i></span> <span class="w"><i>gỡ</i></span> <span class="w"><i>Canva</i></span></div>
+  <div data-b="0" class="fx fx-rise div-s" style="position:absolute;left:140px;top:747px;width:1300px" >Doanh nghiệp, sản phẩm, quy mô và câu chuyện thương hiệu</div>
+</section>
+<section class="slide "  ><div class="bg"><div class="orb" style="left:1150px;top:-390px;width:1100px;height:1100px;background:radial-gradient(closest-side, rgba(125,42,232,0.4) 0%, rgba(125,42,232,0.17600000000000002) 45%, rgba(125,42,232,0) 100%);--od:22s"></div><div class="orb" style="left:-390px;top:550px;width:900px;height:900px;background:radial-gradient(closest-side, rgba(0,196,204,0.275) 0%, rgba(0,196,204,0.12100000000000001) 45%, rgba(0,196,204,0) 100%);--od:28s"></div></div>
+    <div data-b="0" class="fx fx-mask h1" style="position:absolute;left:140px;top:104px;width:1640px"><span class="w"><i>Canva</i></span> <span class="w"><i>là</i></span> <span class="w"><i>ai?</i></span></div><div data-b="0" class="fx fx-rise lead" style="position:absolute;left:140px;top:204px;width:1640px" >Nền tảng thiết kế trực tuyến giúp bất kỳ ai cũng tạo được ấn phẩm đẹp, không cần kỹ năng chuyên môn</div>
+    <div style="position:absolute;left:140px;top:340px;width:640px"><div data-b="1" class="fx fx-rise fact " style="" ><div class="k">Thành lập</div><div class="v">2013, Sydney, Úc</div></div><div data-b="1" class="fx fx-rise fact hair" style="" ><div class="k">Nhà sáng lập</div><div class="v">Melanie Perkins, Cliff Obrecht, Cameron Adams</div></div><div data-b="1" class="fx fx-rise fact hair" style="" ><div class="k">Sứ mệnh</div><div class="v">Giúp mọi người thiết kế mọi thứ và xuất bản ở mọi nơi</div></div><div data-b="1" class="fx fx-rise fact hair" style="" ><div class="k">Mô hình kinh doanh</div><div class="v">Thiết kế trực tuyến, freemium (SaaS)</div></div><div data-b="1" class="fx fx-rise fact hair" style="" ><div class="k">Canva Vietnam</div><div class="v">Giám đốc quốc gia Elle Liu</div></div></div>
+    <div data-b="2" class="fx fx-rise tile glass" style="position:absolute;left:860px;top:350px;width:290.6666666666667px;height:262px" ><div class="h4">Free và Pro</div><div class="p" style="margin-top:12px;font-size:24px">Gói cho cá nhân và nhóm nhỏ (Business)</div></div><div data-b="2" class="fx fx-rise tile glass" style="position:absolute;left:1174.6666666666667px;top:350px;width:290.6666666666667px;height:262px" ><div class="h4">Enterprise</div><div class="p" style="margin-top:12px;font-size:24px">Quản trị thương hiệu cho tổ chức lớn</div></div><div data-b="2" class="fx fx-rise tile glass" style="position:absolute;left:1489.3333333333335px;top:350px;width:290.6666666666667px;height:262px" ><div class="h4">Education</div><div class="p" style="margin-top:12px;font-size:24px">Miễn phí cho giáo viên và học sinh</div></div><div data-b="2" class="fx fx-rise tile glass" style="position:absolute;left:860px;top:636px;width:290.6666666666667px;height:262px" ><div class="h4">Visual Suite</div><div class="p" style="margin-top:12px;font-size:24px">Docs, Slides, Sheets, Websites</div></div><div data-b="2" class="fx fx-rise tile grad" style="position:absolute;left:1174.6666666666667px;top:636px;width:290.6666666666667px;height:262px" ><div class="h4">Canva AI 2.0</div><div class="pw" style="margin-top:12px;font-size:24px">Thiết kế bằng hội thoại, Canva Code</div></div><div data-b="2" class="fx fx-rise tile glass" style="position:absolute;left:1489.3333333333335px;top:636px;width:290.6666666666667px;height:262px" ><div class="h4">Affinity và Print</div><div class="p" style="margin-top:12px;font-size:24px">Công cụ chuyên nghiệp và in ấn</div></div>
+    <div data-b="2" class="fx selp selbox" style="position:absolute;left:1162.6666666666667px;top:624px;width:314.6666666666667px;height:286px"></div><div data-b="2" class="fx selp handle" style="left:1153.6666666666667px;top:615px"></div><div data-b="2" class="fx selp handle" style="left:1468.3333333333335px;top:615px"></div><div data-b="2" class="fx selp handle" style="left:1153.6666666666667px;top:901px"></div><div data-b="2" class="fx selp handle" style="left:1468.3333333333335px;top:901px"></div>
+  <svg data-b="2" class="fx selp cursor" style="left:1443.3333333333335px;top:890px" width="38" height="38" viewBox="0 0 24 24"><path d="M4 2 L20 11 L12.5 13 L9 21 Z" fill="#7D2AE8" stroke="#fff" stroke-width="1.6" stroke-linejoin="round"/></svg>
+  <div data-b="2" class="fx selp ctag" style="left:1473.3333333333335px;top:920px">Mới nhất</div>
+  </section>
+<section class="slide "  ><div class="bg"><div class="orb" style="left:-200px;top:-320px;width:1400px;height:1400px;background:radial-gradient(closest-side, rgba(90,50,250,0.525) 0%, rgba(90,50,250,0.231) 45%, rgba(90,50,250,0) 100%);--od:22s"></div><div class="orb" style="left:1150px;top:450px;width:1000px;height:1000px;background:radial-gradient(closest-side, rgba(0,196,204,0.35000000000000003) 0%, rgba(0,196,204,0.15400000000000003) 45%, rgba(0,196,204,0) 100%);--od:28s"></div></div>
+  <div data-b="0" class="fx fx-mask h1" style="position:absolute;left:140px;top:104px;width:1640px"><span class="w"><i>Kỳ</i></span> <span class="w"><i>lân</i></span> <span class="w"><i>thiết</i></span> <span class="w"><i>kế</i></span> <span class="w"><i>lớn</i></span> <span class="w"><i>nhất</i></span> <span class="w"><i>thế</i></span> <span class="w"><i>giới</i></span></div>
+  <div data-b="1" class="fx fx-zoom hero" style="position:absolute;left:128px;top:250px;width:1100px" ><span class="count" data-to="265" data-pre="" data-suf=" triệu+" data-sep="0">265 triệu+</span></div>
+  <div data-b="1" class="fx fx-rise lead" style="position:absolute;left:140px;top:470px;width:900px" >người dùng hoạt động mỗi tháng tính đến cuối năm 2025</div>
+  <div data-b="2" class="fx fx-rise side " style="position:absolute;left:1240px;top:270px;width:540px" ><div class="side-n"><span class="count" data-to="31" data-pre="" data-suf=" triệu+" data-sep="0">31 triệu+</span></div><div class="p">người dùng trả phí</div></div><div data-b="2" class="fx fx-rise side hair" style="position:absolute;left:1240px;top:440px;width:540px" ><div class="side-n">4 tỷ USD</div><div class="p">doanh thu định kỳ năm (ARR), tăng 43% so với 2024</div></div><div data-b="2" class="fx fx-rise side hair" style="position:absolute;left:1240px;top:610px;width:540px" ><div class="side-n"><span class="count" data-to="190" data-pre="" data-suf="" data-sep="0">190</span></div><div class="p">quốc gia có người dùng Canva</div></div>
+  <div data-b="3" class="fx fx-fade k" style="position:absolute;left:140px;top:640px;width:600px" >Doanh thu định kỳ năm (ARR)</div>
+  <div data-b="3" class="fx fx-fade bar-l" style="position:absolute;left:140px;top:700px;width:120px" >2024</div>
+  <div data-b="3" class="fx fx-draw bar bar-a" style="position:absolute;left:260px;top:702px;width:588px;height:56px;transition-duration:1.3s" ></div>
+  <div data-b="3" class="fx fx-fade bar-v" style="position:absolute;left:868px;top:704px;width:240px" >2,8 tỷ USD</div>
+  <div data-b="3" class="fx fx-fade bar-l" style="position:absolute;left:140px;top:790px;width:120px" >2025</div>
+  <div data-b="3" class="fx fx-draw bar bar-b" style="position:absolute;left:260px;top:792px;width:840px;height:56px;transition-duration:1.7s" ></div>
+  <div data-b="3" class="fx fx-fade bar-v" style="position:absolute;left:1120px;top:794px;width:240px" >4 tỷ USD</div>
+  <div data-b="3" class="fx fx-fade src" style="" >Nguồn: TechCrunch (02/2026), Sacra, DemandSage</div>
+</section>
+<section class="slide "  ><div class="bg"><div class="orb" style="left:110px;top:-230px;width:1700px;height:1700px;background:radial-gradient(closest-side, rgba(125,42,232,0.375) 0%, rgba(125,42,232,0.165) 45%, rgba(125,42,232,0) 100%);--od:30s"></div><div class="orb" style="left:-300px;top:-300px;width:900px;height:900px;background:radial-gradient(closest-side, rgba(0,196,204,0.3125) 0%, rgba(0,196,204,0.1375) 45%, rgba(0,196,204,0) 100%);--od:22s"></div><div class="orb" style="left:1400px;top:-250px;width:800px;height:800px;background:radial-gradient(closest-side, rgba(90,50,250,0.375) 0%, rgba(90,50,250,0.165) 45%, rgba(90,50,250,0) 100%);--od:26s"></div></div>
+    <div data-b="0" class="fx fx-mask h1" style="position:absolute;left:140px;top:104px;width:1640px"><span class="w"><i>Tại</i></span> <span class="w"><i>Việt</i></span> <span class="w"><i>Nam,</i></span> <span class="w"><i>Canva</i></span> <span class="w"><i>đã</i></span> <span class="w"><i>là</i></span> <span class="w"><i>thói</i></span> <span class="w"><i>quen</i></span></div><div data-b="0" class="fx fx-rise lead" style="position:absolute;left:140px;top:204px;width:1640px" >Trước cả khi chính thức ra mắt, người Việt đã thiết kế trên Canva mỗi ngày</div>
+    <div data-b="1" class="fx fx-rise vn-col hair" style="position:absolute;left:140px;top:380px;width:380px" ><div class="vn-n" style="color:#00C4CC"><span class="count" data-to="6" data-pre="" data-suf="" data-sep="0">6</span><span class="unit"> triệu+</span></div><div class="p" style="font-size:28px">người dùng</div></div><div data-b="1" class="fx fx-rise vn-col hair" style="position:absolute;left:560px;top:380px;width:380px" ><div class="vn-n" style="color:#7FA2FF"><span class="count" data-to="20" data-pre="" data-suf="" data-sep="0">20</span><span class="unit"> triệu+</span></div><div class="p" style="font-size:28px">thiết kế mỗi tháng</div></div><div data-b="1" class="fx fx-rise vn-col hair" style="position:absolute;left:980px;top:380px;width:380px" ><div class="vn-n" style="color:#B99BFF"><span class="count" data-to="460" data-pre="~" data-suf="" data-sep="0">~460</span></div><div class="p" style="font-size:28px">thiết kế mỗi phút</div></div><div data-b="1" class="fx fx-rise vn-col hair" style="position:absolute;left:1400px;top:380px;width:380px" ><div class="vn-n" style="color:#FFD400"><span class="count" data-to="500" data-pre="" data-suf="" data-sep="0">500</span><span class="unit">+</span></div><div class="p" style="font-size:28px">font tiếng Việt mới</div></div>
+    <div data-b="2" class="fx fx-rise glass quote" style="position:absolute;left:140px;top:700px;width:1640px;height:200px" ><div class="dot" style="width:76px;height:76px" data-grad><svg class="ic" stroke="currentColor" fill="none" stroke-width="2" viewBox="0 0 24 24" stroke-linecap="round" stroke-linejoin="round" color="#fff" style="color:#fff" height="38" width="38" xmlns="http://www.w3.org/2000/svg"><polyline points="22 7 13.5 15.5 8.5 10.5 2 17"></polyline><polyline points="16 7 22 7 22 13"></polyline></svg></div>
+      <div><div class="q-t">Việt Nam được Canva xác định là một trong những thị trường tăng trưởng nhanh và giàu tiềm năng nhất Đông Nam Á</div>
+      <div class="k" style="margin-top:10px">Theo bà Elle Liu, Giám đốc Quốc gia Canva Việt Nam</div></div></div>
+    <div data-b="2" class="fx fx-fade src" style="" >Nguồn: VnEconomy (29/4/2026), CafeF (28/4/2026), Báo Đầu tư</div>
+  </section>
+<section class="slide "  ><div class="bg"><div class="orb" style="left:-90px;top:-10px;width:1300px;height:1300px;background:radial-gradient(closest-side, rgba(90,50,250,0.5) 0%, rgba(90,50,250,0.22000000000000003) 45%, rgba(90,50,250,0) 100%);--od:22s"></div><div class="orb" style="left:1300px;top:-270px;width:900px;height:900px;background:radial-gradient(closest-side, rgba(125,42,232,0.4) 0%, rgba(125,42,232,0.17600000000000002) 45%, rgba(125,42,232,0) 100%);--od:26s"></div></div>
+    <div data-b="0" class="fx fx-mask h1" style="position:absolute;left:140px;top:104px;width:1640px"><span class="w"><i>Giải</i></span> <span class="w"><i>phẫu</i></span> <span class="w"><i>logo</i></span> <span class="w"><i>Canva</i></span></div><div data-b="0" class="fx fx-rise lead" style="position:absolute;left:140px;top:204px;width:1640px" >Mỗi chi tiết nói cùng một lời hứa: thiết kế dễ như viết tay, hiện đại như công nghệ</div>
+    <div data-b="1" class="fx fx-rise grad panel" style="position:absolute;left:140px;top:330px;width:860px;height:610px" ></div>
+    <img data-b="1" class="fx fx-wipe " data-a="wordmark" alt="" data-key="wm" style="position:absolute;left:240px;top:450px;width:600px">
+    <div class="flt" style="position:absolute;left:790px;top:712px;width:180px;--fd:6.6s;--fdl:-0.2s"><img data-b="1" class="fx fx-pop " data-a="csphere" alt=""  style="width:100%"></div>
+    <div data-b="1" class="fx selp selbox" style="position:absolute;left:226px;top:438px;width:628px;height:254px"></div><div data-b="1" class="fx selp handle" style="left:217px;top:429px"></div><div data-b="1" class="fx selp handle" style="left:845px;top:429px"></div><div data-b="1" class="fx selp handle" style="left:217px;top:683px"></div><div data-b="1" class="fx selp handle" style="left:845px;top:683px"></div>
+  <svg data-b="1" class="fx selp cursor" style="left:266px;top:672px" width="38" height="38" viewBox="0 0 24 24"><path d="M4 2 L20 11 L12.5 13 L9 21 Z" fill="#7D2AE8" stroke="#fff" stroke-width="1.6" stroke-linejoin="round"/></svg>
+  <div data-b="1" class="fx selp ctag" style="left:296px;top:702px">Wordmark</div>
+    <div data-b="2" class="fx fx-pop dot ndot" style="position:absolute;left:186px;top:530px;width:56px;height:56px" >1</div><div data-b="2" class="fx fx-pop dot ndot" style="position:absolute;left:760px;top:702px;width:56px;height:56px" >2</div><div data-b="2" class="fx fx-pop dot ndot" style="position:absolute;left:170px;top:876px;width:56px;height:56px" >3</div><div data-b="2" class="fx fx-pop dot ndot" style="position:absolute;left:862px;top:418px;width:56px;height:56px" >4</div>
+    <div data-b="2" class="fx fx-rise prow " style="position:absolute;left:1080px;top:340px;width:700px" ><div class="dot ndot" style="width:52px;height:52px">1</div><div><div class="h4">Chữ viết tay (wordmark)</div><div class="p" style="margin-top:6px;font-size:24px">Nét script mềm như tự tay viết: thân thiện, ai cũng thiết kế được</div></div></div><div data-b="2" class="fx fx-rise prow hair" style="position:absolute;left:1080px;top:490px;width:700px" ><div class="dot ndot" style="width:52px;height:52px">2</div><div><div class="h4">Biểu tượng tròn</div><div class="p" style="margin-top:6px;font-size:24px">Chữ C trắng trên nền tròn: trọn vẹn, dễ nhận ra trên điện thoại</div></div></div><div data-b="2" class="fx fx-rise prow hair" style="position:absolute;left:1080px;top:640px;width:700px" ><div class="dot ndot" style="width:52px;height:52px">3</div><div><div class="h4">Dải gradient xanh ngọc sang tím</div><div class="p" style="margin-top:6px;font-size:24px">Chuyển màu gợi hành trình biến ý tưởng thành thiết kế</div></div></div><div data-b="2" class="fx fx-rise prow hair" style="position:absolute;left:1080px;top:790px;width:700px" ><div class="dot ndot" style="width:52px;height:52px">4</div><div><div class="h4">Tên gọi Canva</div><div class="p" style="margin-top:6px;font-size:24px">Từ “canvas” (tấm vải vẽ); tiếng Pháp đọc gần như “can-va”</div></div></div>
+  </section>
+<section class="slide "  ><div class="bg"><div class="orb" style="left:-180px;top:-40px;width:1200px;height:1200px;background:radial-gradient(closest-side, rgba(0,196,204,0.325) 0%, rgba(0,196,204,0.14300000000000002) 45%, rgba(0,196,204,0) 100%);--od:22s"></div><div class="orb" style="left:900px;top:160px;width:1200px;height:1200px;background:radial-gradient(closest-side, rgba(125,42,232,0.42500000000000004) 0%, rgba(125,42,232,0.18700000000000003) 45%, rgba(125,42,232,0) 100%);--od:28s"></div></div>
+    <img data-b="0" class="fx fx-fade " data-a="wordmark" alt="" data-key="wm" style="position:absolute;left:1590px;top:112px;width:190px">
+    <div data-b="0" class="fx fx-mask h1" style="position:absolute;left:140px;top:104px;width:1640px"><span class="w"><i>Bảng</i></span> <span class="w"><i>màu</i></span> <span class="w"><i>và</i></span> <span class="w"><i>kiểu</i></span> <span class="w"><i>chữ</i></span></div><div data-b="0" class="fx fx-rise lead" style="position:absolute;left:140px;top:204px;width:1640px" >Ba màu lõi theo brief của Canva Vietnam, ghép thành dải gradient chéo đặc trưng</div>
+    <div data-b="1" class="fx fx-rise glass chip" style="position:absolute;left:140px;top:340px;width:300px;height:580px" ><div class="sw" style="background:#00C4CC"><div class="sw-n">Turq</div><div class="sw-h">#00C4CC</div></div>
+       <div style="padding:22px 12px 0"><div class="k">C94 M0 Y32 K0<br>PMS 7466 C/U</div><div class="h4" style="margin-top:16px;font-size:26px">Tươi mới, cởi mở, sáng tạo</div></div></div><div data-b="1" class="fx fx-rise glass chip" style="position:absolute;left:468px;top:340px;width:300px;height:580px" ><div class="sw" style="background:#5A32FA"><div class="sw-n">Blue</div><div class="sw-h">#5A32FA</div></div>
+       <div style="padding:22px 12px 0"><div class="k">C92 M48 Y0 K0<br>PMS 2369 C/U</div><div class="h4" style="margin-top:16px;font-size:26px">Công nghệ, chiều sâu, tin cậy</div></div></div><div data-b="1" class="fx fx-rise glass chip" style="position:absolute;left:796px;top:340px;width:300px;height:580px" ><div class="sw" style="background:#7D2AE8"><div class="sw-n">Purple</div><div class="sw-h">#7D2AE8</div></div>
+       <div style="padding:22px 12px 0"><div class="k">C66 M90 Y0 K0<br>PMS 266C/2090U</div><div class="h4" style="margin-top:16px;font-size:26px">Trí tưởng tượng, “phép màu” AI</div></div></div>
+    <div data-b="2" class="fx fx-draw grad core" style="position:absolute;left:1120px;top:340px;width:660px;height:170px;transition-duration:1.6s" ></div>
+    <div data-b="2" class="fx fx-fade core-t" style="position:absolute;left:1156px;top:370px;width:600px" >Core Diagonal<span>Turq, Blue và Purple chuyển màu theo góc 135°</span></div>
+    <div data-b="2" class="fx fx-rise h3" style="position:absolute;left:1120px;top:550px;width:660px" >Kiểu chữ riêng: Canva Sans</div>
+    <div data-b="2" class="fx fx-rise p" style="position:absolute;left:1120px;top:602px;width:660px" >Sans-serif bo tròn, hình học nhưng ấm áp; dùng xuyên suốt từ đợt làm mới thương hiệu 2024</div>
+    <div data-b="2" class="fx fx-rise rules" style="position:absolute;left:1120px;top:720px;width:660px" ><div><div class="h4" style="color:#36E0E6">Nên</div><div class="rl"><svg class="ic" stroke="currentColor" fill="none" stroke-width="2" viewBox="0 0 24 24" stroke-linecap="round" stroke-linejoin="round" color="#36E0E6" style="color:#36E0E6" height="28" width="28" xmlns="http://www.w3.org/2000/svg"><path d="M20 6 9 17l-5-5"></path></svg><span>Giữ vùng an toàn quanh logo</span></div><div class="rl"><svg class="ic" stroke="currentColor" fill="none" stroke-width="2" viewBox="0 0 24 24" stroke-linecap="round" stroke-linejoin="round" color="#36E0E6" style="color:#36E0E6" height="28" width="28" xmlns="http://www.w3.org/2000/svg"><path d="M20 6 9 17l-5-5"></path></svg><span>Dùng file vector gốc</span></div></div>
+      <div><div class="h4" style="color:#FF8A5C">Không nên</div><div class="rl"><svg class="ic" stroke="currentColor" fill="none" stroke-width="2" viewBox="0 0 24 24" stroke-linecap="round" stroke-linejoin="round" color="#FF8A5C" style="color:#FF8A5C" height="28" width="28" xmlns="http://www.w3.org/2000/svg"><path d="M18 6 6 18"></path><path d="m6 6 12 12"></path></svg><span>Xoay, kéo giãn logo</span></div><div class="rl"><svg class="ic" stroke="currentColor" fill="none" stroke-width="2" viewBox="0 0 24 24" stroke-linecap="round" stroke-linejoin="round" color="#FF8A5C" style="color:#FF8A5C" height="28" width="28" xmlns="http://www.w3.org/2000/svg"><path d="M18 6 6 18"></path><path d="m6 6 12 12"></path></svg><span>Đổi màu, đổ bóng</span></div><div class="rl"><svg class="ic" stroke="currentColor" fill="none" stroke-width="2" viewBox="0 0 24 24" stroke-linecap="round" stroke-linejoin="round" color="#FF8A5C" style="color:#FF8A5C" height="28" width="28" xmlns="http://www.w3.org/2000/svg"><path d="M18 6 6 18"></path><path d="m6 6 12 12"></path></svg><span>Đặt trên nền rối</span></div></div></div>
+    <div data-b="2" class="fx fx-fade src" style="" >Nguồn: UGC Brief Canva AI (Canva Vietnam), Business Wire (08/2024). Ý nghĩa màu sắc là phân tích của nhóm.</div>
+  </section>
+<section class="slide "  ><div class="bg"><div class="orb" style="left:160px;top:-60px;width:1600px;height:1600px;background:radial-gradient(closest-side, rgba(90,50,250,0.4) 0%, rgba(90,50,250,0.17600000000000002) 45%, rgba(90,50,250,0) 100%);--od:30s"></div><div class="orb" style="left:1350px;top:-280px;width:800px;height:800px;background:radial-gradient(closest-side, rgba(125,42,232,0.35000000000000003) 0%, rgba(125,42,232,0.15400000000000003) 45%, rgba(125,42,232,0) 100%);--od:22s"></div></div>
+    <div data-b="0" class="fx fx-mask h1" style="position:absolute;left:140px;top:104px;width:1640px"><span class="w"><i>Logo</i></span> <span class="w"><i>tiến</i></span> <span class="w"><i>hóa,</i></span> <span class="w"><i>không</i></span> <span class="w"><i>cách</i></span> <span class="w"><i>mạng</i></span></div><div data-b="0" class="fx fx-rise lead" style="position:absolute;left:140px;top:204px;width:1640px" >Thay đổi đủ nhỏ để người dùng vẫn nhận ra, đủ lớn để theo kịp vị thế mới của thương hiệu</div>
+    <div data-b="0" class="fx fx-draw gline" style="position:absolute;left:140px;top:622px;width:1640px;height:4px;transition-duration:1.8s" ></div>
+    <div data-b="1" class="fx fx-rise era-y" style="position:absolute;left:134px;top:420px;width:360px;color:#00C4CC;font-size:118px" >2013</div>
+        <div class="flt" style="position:absolute;left:510px;top:424px;width:104px;--fd:6.2s;--fdl:-3.4s"><img data-b="1" class="fx fx-pop " data-a="sphere" alt=""  style="width:100%"></div>
+        <div data-b="1" class="fx fx-pop era-dot" style="position:absolute;left:140px;top:608px;width:32px;height:32px;background:#00C4CC" ></div>
+        <div data-b="1" class="fx fx-rise h3" style="position:absolute;left:140px;top:680px;width:500px" >Khởi đầu</div>
+        <div data-b="1" class="fx fx-rise p" style="position:absolute;left:140px;top:732px;width:500px" >Khối tròn xanh ngọc với chữ script trắng: thân thiện, dễ nhớ ngay từ ngày đầu</div><div data-b="2" class="fx fx-rise era-y" style="position:absolute;left:704px;top:420px;width:360px;color:#7FA2FF;font-size:118px" >2021</div>
+        <div class="flt" style="position:absolute;left:1080px;top:424px;width:104px;--fd:6.2s;--fdl:-0.4s"><img data-b="2" class="fx fx-pop " data-a="aa" alt=""  style="width:100%"></div>
+        <div data-b="2" class="fx fx-pop era-dot" style="position:absolute;left:710px;top:608px;width:32px;height:32px;background:#7FA2FF" ></div>
+        <div data-b="2" class="fx fx-rise h3" style="position:absolute;left:710px;top:680px;width:500px" >Tinh chỉnh nét chữ</div>
+        <div data-b="2" class="fx fx-rise p" style="position:absolute;left:710px;top:732px;width:500px" >75 vòng thử nghiệm, nét chữ rõ hơn (nhất là chữ “a”); thêm gradient và bản logo chuyển động</div><div data-b="3" class="fx fx-rise era-y" style="position:absolute;left:1274px;top:420px;width:360px;color:#B99BFF;font-size:118px" >2024</div>
+        <div class="flt" style="position:absolute;left:1650px;top:424px;width:104px;--fd:6.2s;--fdl:-2.4s"><img data-b="3" class="fx fx-pop " data-a="aperture" alt=""  style="width:100%"></div>
+        <div data-b="3" class="fx fx-pop era-dot" style="position:absolute;left:1280px;top:608px;width:32px;height:32px;background:#B99BFF" ></div>
+        <div data-b="3" class="fx fx-rise h3" style="position:absolute;left:1280px;top:680px;width:500px" >Hệ thống thương hiệu mới</div>
+        <div data-b="3" class="fx fx-rise p" style="position:absolute;left:1280px;top:732px;width:500px" >Giữ gradient, logo thủ công và kiểu chữ riêng; tự triển khai bằng Canva cho hơn 4.000 nhân sự ở 40 quốc gia</div>
+    <div data-b="3" class="fx fx-fade src" style="" >Nguồn: 1000logos, Creative Bloq, Logos-World, Business Wire (08/2024)</div>
+  </section>
+<section class="slide "  ><div class="bg"><div class="orb" style="left:60px;top:-340px;width:1800px;height:1800px;background:radial-gradient(closest-side, rgba(125,42,232,0.325) 0%, rgba(125,42,232,0.14300000000000002) 45%, rgba(125,42,232,0) 100%);--od:30s"></div><div class="orb" style="left:1250px;top:-240px;width:800px;height:800px;background:radial-gradient(closest-side, rgba(0,196,204,0.275) 0%, rgba(0,196,204,0.12100000000000001) 45%, rgba(0,196,204,0) 100%);--od:22s"></div></div>
+    <div data-b="0" class="fx fx-mask h1" style="position:absolute;left:140px;top:104px;width:1640px"><span class="w"><i>Các</i></span> <span class="w"><i>dấu</i></span> <span class="w"><i>mốc</i></span> <span class="w"><i>nổi</i></span> <span class="w"><i>bật</i></span></div><div data-b="0" class="fx fx-rise lead" style="position:absolute;left:140px;top:204px;width:1640px" >Từ ngày thành lập đến chặng đường bản địa hóa tại Việt Nam</div>
+    <div data-b="1" class="fx fx-draw gline" style="position:absolute;left:240px;top:608px;width:1440px;height:4px;transition-duration:2400ms;transition-timing-function:cubic-bezier(.45,0,.55,1)" ></div>
+    <div data-b="1" class="fx fx-up ms" style="position:absolute;left:90px;top:330px;width:300px;height:560px" data-d="150"><div class="stem" style="left:149px;top:180px"></div><div class="node " style="left:137px;top:267px"></div><div class="ms-d" style="top:18px;color:#9DB4FF">2013</div><div class="ms-t" style="top:62px">Canva ra mắt tại Sydney</div></div><div data-b="1" class="fx fx-up ms" style="position:absolute;left:270px;top:330px;width:300px;height:560px" data-d="413"><div class="stem" style="left:149px;top:302px"></div><div class="node " style="left:137px;top:267px"></div><div class="ms-d" style="top:400px;color:#9DB4FF">10/2021</div><div class="ms-t" style="top:444px">Cán mốc 100 triệu người dùng mỗi tháng</div></div><div data-b="1" class="fx fx-up ms" style="position:absolute;left:450px;top:330px;width:300px;height:560px" data-d="675"><div class="stem" style="left:149px;top:180px"></div><div class="node " style="left:137px;top:267px"></div><div class="ms-d" style="top:18px;color:#9DB4FF">08/2024</div><div class="ms-t" style="top:62px">Làm mới hệ thống thương hiệu</div></div><div data-b="1" class="fx fx-up ms" style="position:absolute;left:630px;top:330px;width:300px;height:560px" data-d="938"><div class="stem" style="left:149px;top:302px"></div><div class="node " style="left:137px;top:267px"></div><div class="ms-d" style="top:400px;color:#9DB4FF">08/2025</div><div class="ms-t" style="top:444px">Định giá 42 tỷ USD</div></div><div data-b="1" class="fx fx-up ms" style="position:absolute;left:810px;top:330px;width:300px;height:560px" data-d="1200"><div class="stem" style="left:149px;top:180px"></div><div class="node vn" style="left:133px;top:263px"></div><div class="ms-d" style="top:18px;color:#FFD400">12/2025</div><div class="ms-t" style="top:62px">Ký hợp tác chiến lược với SIHUB, TP.HCM</div></div><div data-b="1" class="fx fx-up ms" style="position:absolute;left:990px;top:330px;width:300px;height:560px" data-d="1463"><div class="stem" style="left:149px;top:302px"></div><div class="node " style="left:137px;top:267px"></div><div class="ms-d" style="top:400px;color:#9DB4FF">02/2026</div><div class="ms-t" style="top:444px">Mua lại MangoAI và Cavalry</div></div><div data-b="1" class="fx fx-up ms" style="position:absolute;left:1170px;top:330px;width:300px;height:560px" data-d="1725"><div class="stem" style="left:149px;top:180px"></div><div class="node " style="left:137px;top:267px"></div><div class="ms-d" style="top:18px;color:#9DB4FF">16/4/2026</div><div class="ms-t" style="top:62px">Ra mắt Canva AI 2.0 tại Canva Create</div></div><div data-b="1" class="fx fx-up ms" style="position:absolute;left:1350px;top:330px;width:300px;height:560px" data-d="1988"><div class="stem" style="left:149px;top:302px"></div><div class="node vn" style="left:133px;top:263px"></div><div class="ms-d" style="top:400px;color:#FFD400">24/4/2026</div><div class="ms-t" style="top:444px">Chính thức ra mắt tại Việt Nam</div></div><div data-b="1" class="fx fx-up ms" style="position:absolute;left:1530px;top:330px;width:300px;height:560px" data-d="2250"><div class="stem" style="left:149px;top:180px"></div><div class="node vn" style="left:133px;top:263px"></div><div class="ms-d" style="top:18px;color:#FFD400">25/8/2026</div><div class="ms-t" style="top:62px">Hợp tác với NIC về giáo dục</div></div>
+    <div data-b="1" class="fx fx-fade legend" style="position:absolute;left:140px;top:930px;width:700px" data-d="2600"><span><i class="node" style="position:static"></i>Toàn cầu</span><span><i class="node vn" style="position:static"></i>Việt Nam</span></div>
+  </section>
+<section class="slide divider"  ><div class="bg"><div class="orb" style="left:800px;top:-320px;width:1400px;height:1400px;background:radial-gradient(closest-side, rgba(125,42,232,0.5625) 0%, rgba(125,42,232,0.24750000000000003) 45%, rgba(125,42,232,0) 100%);--od:22s"></div><div class="orb" style="left:-150px;top:450px;width:1100px;height:1100px;background:radial-gradient(closest-side, rgba(0,196,204,0.4375) 0%, rgba(0,196,204,0.1925) 45%, rgba(0,196,204,0) 100%);--od:28s"></div><div class="orb" style="left:1350px;top:550px;width:900px;height:900px;background:radial-gradient(closest-side, rgba(90,50,250,0.5) 0%, rgba(90,50,250,0.22000000000000003) 45%, rgba(90,50,250,0) 100%);--od:24s"></div></div>
+  <div data-b="0" class="fx fx-zoom div-n"  style="left:120px;top:40px">02</div>
+  <div class="flt" style="position:absolute;left:1400px;top:50px;width:430px;--fd:7.0s;--fdl:0.0s"><img data-b="0" class="fx fx-pop " data-a="ring" alt=""  style="width:100%"></div><div class="flt" style="position:absolute;left:1640px;top:560px;width:210px;--fd:7.0s;--fdl:0.0s"><img data-b="0" class="fx fx-pop " data-a="bluestar" alt=""  style="width:100%"></div>
+  <div data-b="0" class="fx fx-mask div-t" style="position:absolute;left:140px;top:500px;width:1500px;font-size:118px"><span class="w"><i>Chiến</i></span> <span class="w"><i>lược</i></span> <span class="w"><i>quảng</i></span> <span class="w"><i>cáo</i></span><br><span class="w"><i>tại</i></span> <span class="w"><i>Việt</i></span> <span class="w"><i>Nam</i></span></div>
+  <div data-b="0" class="fx fx-rise div-s" style="position:absolute;left:140px;top:788px;width:1300px" >Định hướng 2026, ba chiến dịch nổi bật, ưu điểm và nhược điểm</div>
+</section>
+<section class="slide "  ><div class="bg"><div class="orb" style="left:1000px;top:-400px;width:1200px;height:1200px;background:radial-gradient(closest-side, rgba(125,42,232,0.4) 0%, rgba(125,42,232,0.17600000000000002) 45%, rgba(125,42,232,0) 100%);--od:22s"></div><div class="orb" style="left:-250px;top:430px;width:1100px;height:1100px;background:radial-gradient(closest-side, rgba(0,196,204,0.3) 0%, rgba(0,196,204,0.132) 45%, rgba(0,196,204,0) 100%);--od:28s"></div></div>
+    <div data-b="0" class="fx fx-mask h1" style="position:absolute;left:140px;top:104px;width:1640px"><span class="w"><i>Định</i></span> <span class="w"><i>hướng</i></span> <span class="w"><i>2026:</i></span> <span class="w"><i>ba</i></span> <span class="w"><i>trụ</i></span> <span class="w"><i>cột</i></span> <span class="w"><i>bản</i></span> <span class="w"><i>địa</i></span> <span class="w"><i>hóa</i></span></div><div data-b="0" class="fx fx-rise lead" style="position:absolute;left:140px;top:204px;width:1640px" >Mục tiêu: biến Canva từ công cụ quen tay thành nền tảng của người Việt, dẫn dắt bởi Canva AI 2.0</div>
+    <div data-b="1" class="fx fx-rise glass pillar" style="position:absolute;left:140px;top:340px;width:528px;height:480px" ><div style="display:flex;gap:22px;align-items:center"><div class="dot" style="width:80px;height:80px;background:linear-gradient(135deg,#00C4CC,#2E9BE6)"><svg class="ic" stroke="currentColor" fill="none" stroke-width="2" viewBox="0 0 24 24" stroke-linecap="round" stroke-linejoin="round" color="#fff" style="color:#fff" height="40" width="40" xmlns="http://www.w3.org/2000/svg"><path d="m2 7 4.41-4.41A2 2 0 0 1 7.83 2h8.34a2 2 0 0 1 1.42.59L22 7"></path><path d="M4 12v8a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2v-8"></path><path d="M15 22v-4a2 2 0 0 0-2-2h-2a2 2 0 0 0-2 2v4"></path><path d="M2 7h20"></path><path d="M22 7v3a2 2 0 0 1-2 2a2.7 2.7 0 0 1-1.59-.63.7.7 0 0 0-.82 0A2.7 2.7 0 0 1 16 12a2.7 2.7 0 0 1-1.59-.63.7.7 0 0 0-.82 0A2.7 2.7 0 0 1 12 12a2.7 2.7 0 0 1-1.59-.63.7.7 0 0 0-.82 0A2.7 2.7 0 0 1 8 12a2.7 2.7 0 0 1-1.59-.63.7.7 0 0 0-.82 0A2.7 2.7 0 0 1 4 12a2 2 0 0 1-2-2V7"></path></svg></div><div class="h3">Kinh tế và SME</div></div>
+      <ul class="list"><li>Đối tác Shopee: miễn phí cho người bán</li><li>Đồng hành Hiệp hội TMĐT (VECOM)</li><li>Canva Academy tới 34 tỉnh thành, hướng tới 1 triệu doanh nghiệp</li></ul></div><div data-b="1" class="fx fx-rise glass pillar" style="position:absolute;left:696px;top:340px;width:528px;height:480px" ><div style="display:flex;gap:22px;align-items:center"><div class="dot" style="width:80px;height:80px;background:linear-gradient(135deg,#2E9BE6,#5A32FA)"><svg class="ic" stroke="currentColor" fill="none" stroke-width="2" viewBox="0 0 24 24" stroke-linecap="round" stroke-linejoin="round" color="#fff" style="color:#fff" height="40" width="40" xmlns="http://www.w3.org/2000/svg"><circle cx="13.5" cy="6.5" r=".5" fill="currentColor"></circle><circle cx="17.5" cy="10.5" r=".5" fill="currentColor"></circle><circle cx="8.5" cy="7.5" r=".5" fill="currentColor"></circle><circle cx="6.5" cy="12.5" r=".5" fill="currentColor"></circle><path d="M12 2C6.5 2 2 6.5 2 12s4.5 10 10 10c.926 0 1.648-.746 1.648-1.688 0-.437-.18-.835-.437-1.125-.29-.289-.438-.652-.438-1.125a1.64 1.64 0 0 1 1.668-1.668h1.996c3.051 0 5.555-2.503 5.555-5.554C21.965 6.012 17.461 2 12 2z"></path></svg></div><div class="h3">Văn hóa và creator</div></div>
+      <ul class="list"><li>Hơn 500 font tiếng Việt</li><li>Template, elements đậm chất Việt</li><li>Nội dung “Made in Vietnam” cùng cộng đồng creator</li></ul></div><div data-b="1" class="fx fx-rise glass pillar" style="position:absolute;left:1252px;top:340px;width:528px;height:480px" ><div style="display:flex;gap:22px;align-items:center"><div class="dot" style="width:80px;height:80px;background:linear-gradient(135deg,#5A32FA,#9B4BFF)"><svg class="ic" stroke="currentColor" fill="none" stroke-width="2" viewBox="0 0 24 24" stroke-linecap="round" stroke-linejoin="round" color="#fff" style="color:#fff" height="40" width="40" xmlns="http://www.w3.org/2000/svg"><path d="M21.42 10.922a1 1 0 0 0-.019-1.838L12.83 5.18a2 2 0 0 0-1.66 0L2.6 9.08a1 1 0 0 0 0 1.832l8.57 3.908a2 2 0 0 0 1.66 0z"></path><path d="M22 10v6"></path><path d="M6 12.5V16a6 3 0 0 0 12 0v-3.5"></path></svg></div><div class="h3">Giáo dục K-12</div></div>
+      <ul class="list"><li>Canva Education miễn phí</li><li>Đào tạo 30.000 giáo viên về AI và thiết kế</li><li>Cuộc thi Canva Creative Challenge 2026</li></ul></div>
+    <div data-b="2" class="fx fx-rise h4" style="position:absolute;left:140px;top:878px;width:280px" >Đòn bẩy chung</div>
+    <div style="position:absolute;left:420px;top:870px;display:flex;gap:18px"><div data-b="2" class="fx fx-rise pill lever" style="" >Thanh toán MoMo, ZaloPay, ShopeePay</div><div data-b="2" class="fx fx-rise pill lever" style="" >Hợp tác khu vực công</div><div data-b="2" class="fx fx-rise pill lever" style="" >Đội ngũ vận hành tại Việt Nam</div></div>
+  </section>
+<section class="slide "  ><div class="bg"><div class="orb" style="left:-70px;top:90px;width:1100px;height:1100px;background:radial-gradient(closest-side, rgba(125,42,232,0.5) 0%, rgba(125,42,232,0.22000000000000003) 45%, rgba(125,42,232,0) 100%);--od:22s"></div><div class="orb" style="left:1100px;top:-200px;width:1000px;height:1000px;background:radial-gradient(closest-side, rgba(90,50,250,0.35000000000000003) 0%, rgba(90,50,250,0.15400000000000003) 45%, rgba(90,50,250,0) 100%);--od:26s"></div></div>
+    <div data-b="0" class="fx fx-mask h1" style="position:absolute;left:140px;top:104px;width:1640px"><span class="w"><i>Chiến</i></span> <span class="w"><i>dịch</i></span> <span class="w"><i>1:</i></span> <span class="w"><i>“Phường</i></span> <span class="w"><i>A.I</i></span> <span class="w"><i>Đồ”</i></span></div><div data-b="0" class="fx fx-rise lead" style="position:absolute;left:140px;top:204px;width:1640px" >Sự kiện ra mắt chính thức Canva tại Việt Nam</div>
+    <div data-b="1" class="fx fx-rise evcard" style="position:absolute;left:140px;top:320px;width:700px;height:620px" ><div class="k" style="color:#E9E4FF">Concept: dạo phố Sài Gòn rực rỡ sắc màu</div><div class="ev-t">Phường A.I Đồ</div>
+      <div class="ev-r"><svg class="ic" stroke="currentColor" fill="none" stroke-width="2" viewBox="0 0 24 24" stroke-linecap="round" stroke-linejoin="round" color="#fff" style="color:#fff" height="30" width="30" xmlns="http://www.w3.org/2000/svg"><path d="M8 2v4"></path><path d="M16 2v4"></path><rect width="18" height="18" x="3" y="4" rx="2"></rect><path d="M3 10h18"></path></svg><span>24/04/2026, 9:00 đến 21:00</span></div><div class="ev-r"><svg class="ic" stroke="currentColor" fill="none" stroke-width="2" viewBox="0 0 24 24" stroke-linecap="round" stroke-linejoin="round" color="#fff" style="color:#fff" height="30" width="30" xmlns="http://www.w3.org/2000/svg"><path d="M20 10c0 4.993-5.539 10.193-7.399 11.799a1 1 0 0 1-1.202 0C9.539 20.193 4 14.993 4 10a8 8 0 0 1 16 0"></path><circle cx="12" cy="10" r="3"></circle></svg><span>Thủ Thiêm Riverstage, TP.HCM</span></div><div class="ev-r"><svg class="ic" stroke="currentColor" fill="none" stroke-width="2" viewBox="0 0 24 24" stroke-linecap="round" stroke-linejoin="round" color="#fff" style="color:#fff" height="30" width="30" xmlns="http://www.w3.org/2000/svg"><path d="M2 9a3 3 0 0 1 0 6v2a2 2 0 0 0 2 2h16a2 2 0 0 0 2-2v-2a3 3 0 0 1 0-6V7a2 2 0 0 0-2-2H4a2 2 0 0 0-2 2Z"></path><path d="M13 5v2"></path><path d="M13 17v2"></path><path d="M13 11v2"></path></svg><span>Experience Zone (đăng ký trước) và Seminar Zone (khách mời)</span></div></div>
+    <div class="flt" style="position:absolute;left:560px;top:300px;width:240px;--fd:7.0s;--fdl:-1.0s"><img data-b="1" class="fx fx-pop " data-a="clapper" alt=""  style="width:100%"></div><div class="flt" style="position:absolute;left:380px;top:312px;width:180px;--fd:7.6s;--fdl:-4.2s"><img data-b="1" class="fx fx-pop " data-a="racket" alt=""  style="width:100%"></div>
+    <div data-b="1" class="fx selp selbox" style="position:absolute;left:128px;top:308px;width:724px;height:644px"></div><div data-b="1" class="fx selp handle" style="left:119px;top:299px"></div><div data-b="1" class="fx selp handle" style="left:843px;top:299px"></div><div data-b="1" class="fx selp handle" style="left:119px;top:943px"></div><div data-b="1" class="fx selp handle" style="left:843px;top:943px"></div>
+  <svg data-b="1" class="fx selp cursor" style="left:818px;top:932px" width="38" height="38" viewBox="0 0 24 24"><path d="M4 2 L20 11 L12.5 13 L9 21 Z" fill="#7D2AE8" stroke="#fff" stroke-width="1.6" stroke-linejoin="round"/></svg>
+  <div data-b="1" class="fx selp ctag" style="left:848px;top:962px">Launch event</div>
+    <div data-b="2" class="fx fx-rise h3" style="position:absolute;left:920px;top:320px;width:860px" >Công bố tại sự kiện</div>
+    <div data-b="2" class="fx fx-rise ann " style="position:absolute;left:920px;top:390px;width:420px" ><div class="dot" style="width:68px;height:68px;background:rgba(155,107,255,.18)"><svg class="ic" stroke="currentColor" fill="none" stroke-width="2" viewBox="0 0 24 24" stroke-linecap="round" stroke-linejoin="round" color="#B99BFF" style="color:#B99BFF" height="34" width="34" xmlns="http://www.w3.org/2000/svg"><path d="M9.937 15.5A2 2 0 0 0 8.5 14.063l-6.135-1.582a.5.5 0 0 1 0-.962L8.5 9.936A2 2 0 0 0 9.937 8.5l1.582-6.135a.5.5 0 0 1 .963 0L14.063 8.5A2 2 0 0 0 15.5 9.937l6.135 1.581a.5.5 0 0 1 0 .964L15.5 14.063a2 2 0 0 0-1.437 1.437l-1.582 6.135a.5.5 0 0 1-.963 0z"></path><path d="M20 3v4"></path><path d="M22 5h-4"></path><path d="M4 17v2"></path><path d="M5 18H3"></path></svg></div><div><div class="h4" style="font-size:28px">Canva AI 2.0</div><div class="p" style="margin-top:4px;font-size:24px">Về Việt Nam chỉ 8 ngày sau khi ra mắt toàn cầu</div></div></div><div data-b="2" class="fx fx-rise ann " style="position:absolute;left:1370px;top:390px;width:420px" ><div class="dot" style="width:68px;height:68px;background:rgba(155,107,255,.18)"><svg class="ic" stroke="currentColor" fill="none" stroke-width="2" viewBox="0 0 24 24" stroke-linecap="round" stroke-linejoin="round" color="#B99BFF" style="color:#B99BFF" height="34" width="34" xmlns="http://www.w3.org/2000/svg"><polyline points="4 7 4 4 20 4 20 7"></polyline><line x1="9" x2="15" y1="20" y2="20"></line><line x1="12" x2="12" y1="4" y2="20"></line></svg></div><div><div class="h4" style="font-size:28px">500+ font tiếng Việt</div><div class="p" style="margin-top:4px;font-size:24px">Cùng kho template và elements bản địa</div></div></div><div data-b="2" class="fx fx-rise ann hair" style="position:absolute;left:920px;top:550px;width:420px" ><div class="dot" style="width:68px;height:68px;background:rgba(155,107,255,.18)"><svg class="ic" stroke="currentColor" fill="none" stroke-width="2" viewBox="0 0 24 24" stroke-linecap="round" stroke-linejoin="round" color="#B99BFF" style="color:#B99BFF" height="34" width="34" xmlns="http://www.w3.org/2000/svg"><path d="M19 7V4a1 1 0 0 0-1-1H5a2 2 0 0 0 0 4h15a1 1 0 0 1 1 1v4h-3a2 2 0 0 0 0 4h3a1 1 0 0 0 1-1v-2a1 1 0 0 0-1-1"></path><path d="M3 5v14a2 2 0 0 0 2 2h15a1 1 0 0 0 1-1v-4"></path></svg></div><div><div class="h4" style="font-size:28px">Thanh toán nội địa</div><div class="p" style="margin-top:4px;font-size:24px">MoMo, ZaloPay, ShopeePay/SPayLater</div></div></div><div data-b="2" class="fx fx-rise ann hair" style="position:absolute;left:1370px;top:550px;width:420px" ><div class="dot" style="width:68px;height:68px;background:rgba(155,107,255,.18)"><svg class="ic" stroke="currentColor" fill="none" stroke-width="2" viewBox="0 0 24 24" stroke-linecap="round" stroke-linejoin="round" color="#B99BFF" style="color:#B99BFF" height="34" width="34" xmlns="http://www.w3.org/2000/svg"><path d="M21.42 10.922a1 1 0 0 0-.019-1.838L12.83 5.18a2 2 0 0 0-1.66 0L2.6 9.08a1 1 0 0 0 0 1.832l8.57 3.908a2 2 0 0 0 1.66 0z"></path><path d="M22 10v6"></path><path d="M6 12.5V16a6 3 0 0 0 12 0v-3.5"></path></svg></div><div><div class="h4" style="font-size:28px">Education miễn phí</div><div class="p" style="margin-top:4px;font-size:24px">Cho giáo viên từ tiểu học đến THPT</div></div></div>
+    <div data-b="3" class="fx fx-rise glass press" style="position:absolute;left:920px;top:730px;width:860px;height:210px" ><div class="pw" style="font-size:24px"><b>Diễn giả:</b> Elle Liu, Quân Lâm, Lisa Trần, Justin Lê (Canva Vietnam) và Canvassador Bình Minh</div>
+      <div class="pw" style="font-size:24px;margin-top:14px"><b>Đưa tin:</b> Vietcetera, Advertising Vietnam, VnEconomy, Báo Đầu tư, VOH</div></div>
+  </section>
+<section class="slide "  ><div class="bg"><div class="orb" style="left:900px;top:160px;width:1200px;height:1200px;background:radial-gradient(closest-side, rgba(125,42,232,0.42500000000000004) 0%, rgba(125,42,232,0.18700000000000003) 45%, rgba(125,42,232,0) 100%);--od:22s"></div><div class="orb" style="left:-200px;top:-200px;width:1000px;height:1000px;background:radial-gradient(closest-side, rgba(0,196,204,0.275) 0%, rgba(0,196,204,0.12100000000000001) 45%, rgba(0,196,204,0) 100%);--od:28s"></div></div>
+    <div data-b="0" class="fx fx-mask h1" style="position:absolute;left:140px;top:104px;width:1640px"><span class="w"><i>Chiến</i></span> <span class="w"><i>dịch</i></span> <span class="w"><i>2:</i></span> <span class="w"><i>giáo</i></span> <span class="w"><i>dục</i></span> <span class="w"><i>là</i></span> <span class="w"><i>cửa</i></span> <span class="w"><i>ngõ</i></span></div><div data-b="0" class="fx fx-rise lead" style="position:absolute;left:140px;top:204px;width:1640px" >Back to School 2026 cùng NIC, KDI Education và Trường ĐH Giáo dục, ĐHQG Hà Nội</div>
+    <div data-b="1" class="fx fx-rise stat " style="position:absolute;left:140px;top:330px;width:520px" ><div class="st-n" style="color:#00C4CC"><span class="count" data-to="30000" data-pre="" data-suf="" data-sep="1">30.000</span></div><div class="p">giáo viên được đào tạo Canva Education và AI</div></div><div data-b="1" class="fx fx-rise stat vline" style="position:absolute;left:700px;top:330px;width:520px" ><div class="st-n" style="color:#7FA2FF"><span class="count" data-to="2000" data-pre="~" data-suf="" data-sep="1">~2.000</span></div><div class="p">lãnh đạo trường dự 6 hội thảo quốc gia (9–10/2026)</div></div><div data-b="1" class="fx fx-rise stat vline" style="position:absolute;left:1260px;top:330px;width:520px" ><div class="st-n" style="color:#B99BFF"><span class="count" data-to="3000" data-pre="~" data-suf="" data-sep="1">~3.000</span></div><div class="p">học sinh tham gia Canva Creative Challenge 2026</div></div>
+    <div data-b="2" class="fx fx-rise h3" style="position:absolute;left:140px;top:600px;width:860px" >Cách triển khai</div>
+    <div data-b="2" class="fx fx-rise li1" style="position:absolute;left:140px;top:664px;width:860px" >Ký hợp tác với Trung tâm Đổi mới sáng tạo Quốc gia (NIC) ngày 25/8/2026</div><div data-b="2" class="fx fx-rise li1" style="position:absolute;left:140px;top:752px;width:860px" >Cuộc thi Creative Challenge chia 3 miền, chung kết tháng 01/2027</div><div data-b="2" class="fx fx-rise li1" style="position:absolute;left:140px;top:840px;width:860px" >Ra mắt hero film Back to School 2026 trước hàng nghìn giáo viên</div>
+    <div data-b="3" class="fx fx-rise grad insight" style="position:absolute;left:1080px;top:600px;width:700px;height:340px" ><div class="k" style="color:#fff;opacity:.85">Insight</div><div class="ins-t">Học sinh, giáo viên hôm nay là nhân viên văn phòng, chủ shop ngày mai. Nuôi thói quen sớm là hào phòng thủ trước Adobe Express và Microsoft Designer.</div></div>
+    <div data-b="3" class="fx selp selbox" style="position:absolute;left:1068px;top:588px;width:724px;height:364px"></div><div data-b="3" class="fx selp handle" style="left:1059px;top:579px"></div><div data-b="3" class="fx selp handle" style="left:1783px;top:579px"></div><div data-b="3" class="fx selp handle" style="left:1059px;top:943px"></div><div data-b="3" class="fx selp handle" style="left:1783px;top:943px"></div>
+  <svg data-b="3" class="fx selp cursor" style="left:1108px;top:932px" width="38" height="38" viewBox="0 0 24 24"><path d="M4 2 L20 11 L12.5 13 L9 21 Z" fill="#7D2AE8" stroke="#fff" stroke-width="1.6" stroke-linejoin="round"/></svg>
+  <div data-b="3" class="fx selp ctag" style="left:1138px;top:962px">Insight</div>
+    <div data-b="3" class="fx fx-fade src" style="" >Nguồn: Mekong ASEAN (25/8/2026), Thanh Niên (25/4/2026), LinkedIn Quân Lâm (Canva Vietnam)</div>
+  </section>
+<section class="slide "  ><div class="bg"><div class="orb" style="left:900px;top:0px;width:1200px;height:1200px;background:radial-gradient(closest-side, rgba(125,42,232,0.4) 0%, rgba(125,42,232,0.17600000000000002) 45%, rgba(125,42,232,0) 100%);--od:22s"></div><div class="orb" style="left:-250px;top:550px;width:900px;height:900px;background:radial-gradient(closest-side, rgba(0,196,204,0.275) 0%, rgba(0,196,204,0.12100000000000001) 45%, rgba(0,196,204,0) 100%);--od:26s"></div></div>
+    <div data-b="0" class="fx fx-mask h1" style="position:absolute;left:140px;top:104px;width:1640px"><span class="w"><i>Chiến</i></span> <span class="w"><i>dịch</i></span> <span class="w"><i>3:</i></span> <span class="w"><i>SME</i></span> <span class="w"><i>và</i></span> <span class="w"><i>cộng</i></span> <span class="w"><i>đồng</i></span> <span class="w"><i>sáng</i></span> <span class="w"><i>tạo</i></span></div><div data-b="0" class="fx fx-rise lead" style="position:absolute;left:140px;top:204px;width:1640px" >Quảng cáo dựa vào đối tác và cộng đồng thay vì mua media đại trà</div>
+    <div data-b="1" class="fx fx-rise glass t3" style="position:absolute;left:140px;top:330px;width:500px;height:286px" ><div class="dot" style="width:72px;height:72px;background:linear-gradient(135deg,#00C4CC,#2E9BE6)"><svg class="ic" stroke="currentColor" fill="none" stroke-width="2" viewBox="0 0 24 24" stroke-linecap="round" stroke-linejoin="round" color="#fff" style="color:#fff" height="36" width="36" xmlns="http://www.w3.org/2000/svg"><path d="m11 17 2 2a1 1 0 1 0 3-3"></path><path d="m14 14 2.5 2.5a1 1 0 1 0 3-3l-3.88-3.88a3 3 0 0 0-4.24 0l-.88.88a1 1 0 1 1-3-3l2.81-2.81a5.79 5.79 0 0 1 7.06-.87l.47.28a2 2 0 0 0 1.42.25L21 4"></path><path d="m21 3 1 11h-2"></path><path d="M3 3 2 14l6.5 6.5a1 1 0 1 0 3-3"></path><path d="M3 4h8"></path></svg></div><div class="h4" style="margin-top:22px">SIHUB, TP.HCM (12/2025)</div><div class="p" style="margin-top:8px;font-size:24px">Đào tạo, mentoring, workshop cho startup, SME và ngành giáo dục</div></div><div data-b="1" class="fx fx-rise glass t3" style="position:absolute;left:670px;top:330px;width:500px;height:286px" ><div class="dot" style="width:72px;height:72px;background:linear-gradient(135deg,#2E9BE6,#5A32FA)"><svg class="ic" stroke="currentColor" fill="none" stroke-width="2" viewBox="0 0 24 24" stroke-linecap="round" stroke-linejoin="round" color="#fff" style="color:#fff" height="36" width="36" xmlns="http://www.w3.org/2000/svg"><path d="m2 7 4.41-4.41A2 2 0 0 1 7.83 2h8.34a2 2 0 0 1 1.42.59L22 7"></path><path d="M4 12v8a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2v-8"></path><path d="M15 22v-4a2 2 0 0 0-2-2h-2a2 2 0 0 0-2 2v4"></path><path d="M2 7h20"></path><path d="M22 7v3a2 2 0 0 1-2 2a2.7 2.7 0 0 1-1.59-.63.7.7 0 0 0-.82 0A2.7 2.7 0 0 1 16 12a2.7 2.7 0 0 1-1.59-.63.7.7 0 0 0-.82 0A2.7 2.7 0 0 1 12 12a2.7 2.7 0 0 1-1.59-.63.7.7 0 0 0-.82 0A2.7 2.7 0 0 1 8 12a2.7 2.7 0 0 1-1.59-.63.7.7 0 0 0-.82 0A2.7 2.7 0 0 1 4 12a2 2 0 0 1-2-2V7"></path></svg></div><div class="h4" style="margin-top:22px">Shopee và VECOM</div><div class="p" style="margin-top:8px;font-size:24px">Miễn phí cho người bán; đưa thiết kế vào vận hành thương mại điện tử</div></div><div data-b="1" class="fx fx-rise glass t3" style="position:absolute;left:140px;top:640px;width:500px;height:286px" ><div class="dot" style="width:72px;height:72px;background:linear-gradient(135deg,#5A32FA,#7D2AE8)"><svg class="ic" stroke="currentColor" fill="none" stroke-width="2" viewBox="0 0 24 24" stroke-linecap="round" stroke-linejoin="round" color="#fff" style="color:#fff" height="36" width="36" xmlns="http://www.w3.org/2000/svg"><path d="M14 22v-4a2 2 0 1 0-4 0v4"></path><path d="m18 10 3.447 1.724a1 1 0 0 1 .553.894V20a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2v-7.382a1 1 0 0 1 .553-.894L6 10"></path><path d="M18 5v17"></path><path d="m4 6 7.106-3.553a2 2 0 0 1 1.788 0L20 6"></path><path d="M6 5v17"></path><circle cx="12" cy="9" r="2"></circle></svg></div><div class="h4" style="margin-top:22px">Canva Academy</div><div class="p" style="margin-top:8px;font-size:24px">Lớp cộng đồng, có lớp cho học viên khiếm thính cùng ASIF Foundation, UEF</div></div><div data-b="1" class="fx fx-rise glass t3" style="position:absolute;left:670px;top:640px;width:500px;height:286px" ><div class="dot" style="width:72px;height:72px;background:linear-gradient(135deg,#7D2AE8,#B04BE8)"><svg class="ic" stroke="currentColor" fill="none" stroke-width="2" viewBox="0 0 24 24" stroke-linecap="round" stroke-linejoin="round" color="#fff" style="color:#fff" height="36" width="36" xmlns="http://www.w3.org/2000/svg"><path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2"></path><circle cx="9" cy="7" r="4"></circle><path d="M22 21v-2a4 4 0 0 0-3-3.87"></path><path d="M16 3.13a4 4 0 0 1 0 7.75"></path></svg></div><div class="h4" style="margin-top:22px">Canvassador và webinar</div><div class="p" style="margin-top:8px;font-size:24px">Ví dụ “Canva 101” (29/3/2026), tặng voucher Canva Pro 6 tháng</div></div>
+    <div data-b="2" class="fx fx-pop sticky" style="position:absolute;left:1240px;top:360px;width:540px;height:500px" ><div class="h3" style="color:#17134A">Vai trò trong chiến lược quảng cáo</div>
+      <div class="sk-p">Chi phí thấp, uy tín cao nhờ dựa vào đối tác đã có sẵn niềm tin.</div>
+      <div class="sk-p"><b>Điểm yếu:</b> độ phủ đại chúng tăng chậm, khó tạo cú hích nhận biết.</div></div>
+    <div class="flt" style="position:absolute;left:1580px;top:296px;width:200px;--fd:5.8s;--fdl:-2.6s"><img data-b="2" class="fx fx-pop " data-a="eyes_lips" alt=""  style="width:100%"></div>
+  </section>
+<section class="slide " data-st="140" ><div class="bg"><div class="orb" style="left:60px;top:0px;width:1800px;height:1800px;background:radial-gradient(closest-side, rgba(90,50,250,0.375) 0%, rgba(90,50,250,0.165) 45%, rgba(90,50,250,0) 100%);--od:30s"></div><div class="orb" style="left:1300px;top:-280px;width:800px;height:800px;background:radial-gradient(closest-side, rgba(0,196,204,0.275) 0%, rgba(0,196,204,0.12100000000000001) 45%, rgba(0,196,204,0) 100%);--od:22s"></div></div>
+    <div data-b="0" class="fx fx-mask h1" style="position:absolute;left:140px;top:104px;width:1640px"><span class="w"><i>Những</i></span> <span class="w"><i>điều</i></span> <span class="w"><i>Canva</i></span> <span class="w"><i>đã</i></span> <span class="w"><i>làm</i></span> <span class="w"><i>tốt</i></span></div><div data-b="0" class="fx fx-rise lead" style="position:absolute;left:140px;top:204px;width:1640px" >Nền móng chiến lược vững: đúng đối tượng, đúng kênh, đúng đối tác</div>
+    <div data-b="1" class="fx fx-rise pro " style="position:absolute;left:140px;top:360px;width:316px" ><div class="dot glowdot" style="width:96px;height:96px;background:#00C4CC;--gc:#00C4CC"><svg class="ic" stroke="currentColor" fill="none" stroke-width="2" viewBox="0 0 24 24" stroke-linecap="round" stroke-linejoin="round" color="#fff" style="color:#fff" height="46" width="46" xmlns="http://www.w3.org/2000/svg"><polyline points="4 7 4 4 20 4 20 7"></polyline><line x1="9" x2="15" y1="20" y2="20"></line><line x1="12" x2="12" y1="4" y2="20"></line></svg></div><div class="h3" style="margin-top:34px;min-height:88px">Bản địa hóa ở tầng sản phẩm</div><div class="p" style="margin-top:16px;font-size:26px">500+ font, template Việt, ví điện tử nội địa giảm rào cản sử dụng và thanh toán</div></div><div data-b="1" class="fx fx-rise pro vline" style="position:absolute;left:476px;top:360px;width:316px" ><div class="dot glowdot" style="width:96px;height:96px;background:#2E9BE6;--gc:#2E9BE6"><svg class="ic" stroke="currentColor" fill="none" stroke-width="2" viewBox="0 0 24 24" stroke-linecap="round" stroke-linejoin="round" color="#fff" style="color:#fff" height="46" width="46" xmlns="http://www.w3.org/2000/svg"><path d="m11 17 2 2a1 1 0 1 0 3-3"></path><path d="m14 14 2.5 2.5a1 1 0 1 0 3-3l-3.88-3.88a3 3 0 0 0-4.24 0l-.88.88a1 1 0 1 1-3-3l2.81-2.81a5.79 5.79 0 0 1 7.06-.87l.47.28a2 2 0 0 0 1.42.25L21 4"></path><path d="m21 3 1 11h-2"></path><path d="M3 3 2 14l6.5 6.5a1 1 0 1 0 3-3"></path><path d="M3 4h8"></path></svg></div><div class="h3" style="margin-top:34px;min-height:88px">Liên minh công – tư</div><div class="p" style="margin-top:16px;font-size:26px">SIHUB, Sở KH&CN TP.HCM, NIC mang lại uy tín và kênh tiếp cận quy mô lớn</div></div><div data-b="1" class="fx fx-rise pro vline" style="position:absolute;left:812px;top:360px;width:316px" ><div class="dot glowdot" style="width:96px;height:96px;background:#5A32FA;--gc:#5A32FA"><svg class="ic" stroke="currentColor" fill="none" stroke-width="2" viewBox="0 0 24 24" stroke-linecap="round" stroke-linejoin="round" color="#fff" style="color:#fff" height="46" width="46" xmlns="http://www.w3.org/2000/svg"><path d="M21.42 10.922a1 1 0 0 0-.019-1.838L12.83 5.18a2 2 0 0 0-1.66 0L2.6 9.08a1 1 0 0 0 0 1.832l8.57 3.908a2 2 0 0 0 1.66 0z"></path><path d="M22 10v6"></path><path d="M6 12.5V16a6 3 0 0 0 12 0v-3.5"></path></svg></div><div class="h3" style="margin-top:34px;min-height:88px">Education-first</div><div class="p" style="margin-top:16px;font-size:26px">Phủ thói quen từ lớp học, xây tệp người dùng trung thành dài hạn</div></div><div data-b="1" class="fx fx-rise pro vline" style="position:absolute;left:1148px;top:360px;width:316px" ><div class="dot glowdot" style="width:96px;height:96px;background:#7D2AE8;--gc:#7D2AE8"><svg class="ic" stroke="currentColor" fill="none" stroke-width="2" viewBox="0 0 24 24" stroke-linecap="round" stroke-linejoin="round" color="#fff" style="color:#fff" height="46" width="46" xmlns="http://www.w3.org/2000/svg"><path d="M4 14a1 1 0 0 1-.78-1.63l9.9-10.2a.5.5 0 0 1 .86.46l-1.92 6.02A1 1 0 0 0 13 10h7a1 1 0 0 1 .78 1.63l-9.9 10.2a.5.5 0 0 1-.86-.46l1.92-6.02A1 1 0 0 0 11 14z"></path></svg></div><div class="h3" style="margin-top:34px;min-height:88px">Đúng thời điểm</div><div class="p" style="margin-top:16px;font-size:26px">Ra mắt ngay sau Canva AI 2.0, có sẵn câu chuyện AI tiên phong</div></div><div data-b="1" class="fx fx-rise pro vline" style="position:absolute;left:1484px;top:360px;width:316px" ><div class="dot glowdot" style="width:96px;height:96px;background:#B04BE8;--gc:#B04BE8"><svg class="ic" stroke="currentColor" fill="none" stroke-width="2" viewBox="0 0 24 24" stroke-linecap="round" stroke-linejoin="round" color="#fff" style="color:#fff" height="46" width="46" xmlns="http://www.w3.org/2000/svg"><path d="m3 11 18-5v12L3 14v-3z"></path><path d="M11.6 16.8a3 3 0 1 1-5.8-1.6"></path></svg></div><div class="h3" style="margin-top:34px;min-height:88px">PR phủ rộng</div><div class="p" style="margin-top:16px;font-size:26px">Báo kinh tế, marketing đồng loạt đưa tin; creator nội địa lên tiếng ủng hộ</div></div>
+  </section>
+<section class="slide "  ><div class="bg"><div class="orb" style="left:-150px;top:150px;width:1100px;height:1100px;background:radial-gradient(closest-side, rgba(255,107,61,0.22499999999999998) 0%, rgba(255,107,61,0.099) 45%, rgba(255,107,61,0) 100%);--od:26s"></div><div class="orb" style="left:900px;top:0px;width:1200px;height:1200px;background:radial-gradient(closest-side, rgba(125,42,232,0.35000000000000003) 0%, rgba(125,42,232,0.15400000000000003) 45%, rgba(125,42,232,0) 100%);--od:22s"></div></div>
+    <div data-b="0" class="fx fx-mask h1" style="position:absolute;left:140px;top:104px;width:1200px"><span class="w"><i>Nhược</i></span> <span class="w"><i>điểm</i></span> <span class="w"><i>và</i></span> <span class="w"><i>hệ</i></span> <span class="w"><i>quả</i></span></div>
+    <div data-b="0" class="fx fx-rise h4" style="position:absolute;left:140px;top:236px;width:400px;color:#FF8A5C" >Nhược điểm</div>
+    <div data-b="0" class="fx fx-rise h4" style="position:absolute;left:1000px;top:236px;width:400px;color:#B99BFF" >Hệ quả</div>
+    <div class="flt" style="position:absolute;left:410px;top:206px;width:112px;--fd:5.8s;--fdl:-1.6s"><img data-b="0" class="fx fx-pop " data-a="eyes_mus" alt=""  style="width:100%"></div>
+    <div data-b="1" class="fx fx-left weak" style="position:absolute;left:140px;top:304px;width:790px;height:134px" ><svg class="ic" stroke="currentColor" fill="none" stroke-width="2" viewBox="0 0 24 24" stroke-linecap="round" stroke-linejoin="round" color="#FF8A5C" style="color:#FF8A5C" height="34" width="34" xmlns="http://www.w3.org/2000/svg"><path d="M18 6 6 18"></path><path d="m6 6 12 12"></path></svg><span>Sự kiện ra mắt sai lệch văn hóa, lỗi ngôn ngữ, thiếu điểm nhấn</span></div>
+        <div data-b="1" class="fx fx-fade warrow" style="position:absolute;left:946px;top:354px;width:40px;height:40px" ><svg class="ic" stroke="currentColor" fill="none" stroke-width="2" viewBox="0 0 24 24" stroke-linecap="round" stroke-linejoin="round" color="#B99BFF" style="color:#B99BFF" height="34" width="34" xmlns="http://www.w3.org/2000/svg"><path d="M5 12h14"></path><path d="m12 5 7 7-7 7"></path></svg></div>
+        <div data-b="1" class="fx fx-rise glass cons" style="position:absolute;left:1000px;top:304px;width:780px;height:134px" >Bị chỉ trích “cẩu thả”, Canva phải thừa nhận công khai; đi ngược chính thông điệp bản địa hóa</div><div data-b="2" class="fx fx-left weak" style="position:absolute;left:140px;top:458px;width:790px;height:134px" ><svg class="ic" stroke="currentColor" fill="none" stroke-width="2" viewBox="0 0 24 24" stroke-linecap="round" stroke-linejoin="round" color="#FF8A5C" style="color:#FF8A5C" height="34" width="34" xmlns="http://www.w3.org/2000/svg"><path d="M18 6 6 18"></path><path d="m6 6 12 12"></path></svg><span>Phản hồi khủng hoảng sau khoảng 4 ngày, nội dung chung chung</span></div>
+        <div data-b="2" class="fx fx-fade warrow" style="position:absolute;left:946px;top:508px;width:40px;height:40px" ><svg class="ic" stroke="currentColor" fill="none" stroke-width="2" viewBox="0 0 24 24" stroke-linecap="round" stroke-linejoin="round" color="#B99BFF" style="color:#B99BFF" height="34" width="34" xmlns="http://www.w3.org/2000/svg"><path d="M5 12h14"></path><path d="m12 5 7 7-7 7"></path></svg></div>
+        <div data-b="2" class="fx fx-rise glass cons" style="position:absolute;left:1000px;top:458px;width:780px;height:134px" >Tin tiêu cực chiếm sóng thời điểm vàng sau ra mắt; niềm tin cộng đồng sáng tạo giảm</div><div data-b="3" class="fx fx-left weak" style="position:absolute;left:140px;top:612px;width:790px;height:134px" ><svg class="ic" stroke="currentColor" fill="none" stroke-width="2" viewBox="0 0 24 24" stroke-linecap="round" stroke-linejoin="round" color="#FF8A5C" style="color:#FF8A5C" height="34" width="34" xmlns="http://www.w3.org/2000/svg"><path d="M18 6 6 18"></path><path d="m6 6 12 12"></path></svg><span>Nặng PR và hợp tác B2G, thiếu chiến dịch đại chúng sáng tạo</span></div>
+        <div data-b="3" class="fx fx-fade warrow" style="position:absolute;left:946px;top:662px;width:40px;height:40px" ><svg class="ic" stroke="currentColor" fill="none" stroke-width="2" viewBox="0 0 24 24" stroke-linecap="round" stroke-linejoin="round" color="#B99BFF" style="color:#B99BFF" height="34" width="34" xmlns="http://www.w3.org/2000/svg"><path d="M5 12h14"></path><path d="m12 5 7 7-7 7"></path></svg></div>
+        <div data-b="3" class="fx fx-rise glass cons" style="position:absolute;left:1000px;top:612px;width:780px;height:134px" >Canva Việt Nam chưa có dấu ấn riêng, trong khi Canva Indonesia đã có chiến dịch brand AI</div><div data-b="4" class="fx fx-left weak" style="position:absolute;left:140px;top:766px;width:790px;height:134px" ><svg class="ic" stroke="currentColor" fill="none" stroke-width="2" viewBox="0 0 24 24" stroke-linecap="round" stroke-linejoin="round" color="#FF8A5C" style="color:#FF8A5C" height="34" width="34" xmlns="http://www.w3.org/2000/svg"><path d="M18 6 6 18"></path><path d="m6 6 12 12"></path></svg><span>Chưa giải bài toán chuyển đổi trả phí</span></div>
+        <div data-b="4" class="fx fx-fade warrow" style="position:absolute;left:946px;top:816px;width:40px;height:40px" ><svg class="ic" stroke="currentColor" fill="none" stroke-width="2" viewBox="0 0 24 24" stroke-linecap="round" stroke-linejoin="round" color="#B99BFF" style="color:#B99BFF" height="34" width="34" xmlns="http://www.w3.org/2000/svg"><path d="M5 12h14"></path><path d="m12 5 7 7-7 7"></path></svg></div>
+        <div data-b="4" class="fx fx-rise glass cons" style="position:absolute;left:1000px;top:766px;width:780px;height:134px" >Tài khoản Pro “share/edu” giá rẻ tràn lan làm rò rỉ doanh thu; chi phí AI cho người dùng free tăng</div>
+    <div data-b="4" class="fx fx-fade src" style="" >Nguồn: CafeF / An ninh Tiền tệ (28/4/2026), Marketech APAC, Đời sống & Pháp luật (31/8/2026), khảo sát các trang bán tài khoản</div>
+  </section>
+<section class="slide g-join"  data-game="join"><div class="bg"><div class="orb" style="left:900px;top:-60px;width:1200px;height:1200px;background:radial-gradient(closest-side, rgba(125,42,232,0.6875) 0%, rgba(125,42,232,0.30250000000000005) 45%, rgba(125,42,232,0) 100%);--od:22s"></div><div class="orb" style="left:-200px;top:500px;width:1000px;height:1000px;background:radial-gradient(closest-side, rgba(0,196,204,0.375) 0%, rgba(0,196,204,0.165) 45%, rgba(0,196,204,0) 100%);--od:28s"></div><div class="orb" style="left:-200px;top:-300px;width:800px;height:800px;background:radial-gradient(closest-side, rgba(90,50,250,0.375) 0%, rgba(90,50,250,0.165) 45%, rgba(90,50,250,0) 100%);--od:24s"></div></div>
+    <div data-b="0" class="fx fx-rise g-tag" style="position:absolute;left:140px;top:100px" ><svg class="ic" stroke="currentColor" fill="none" stroke-width="2" viewBox="0 0 24 24" stroke-linecap="round" stroke-linejoin="round" color="#17134A" style="color:#17134A" height="26" width="26" xmlns="http://www.w3.org/2000/svg"><line x1="6" x2="10" y1="11" y2="11"></line><line x1="8" x2="8" y1="9" y2="13"></line><line x1="15" x2="15.01" y1="12" y2="12"></line><line x1="18" x2="18.01" y1="10" y2="10"></line><path d="M17.32 5H6.68a4 4 0 0 0-3.978 3.59c-.006.052-.01.101-.017.152C2.604 9.416 2 14.456 2 16a3 3 0 0 0 3 3c1 0 1.5-.5 2-1l1.414-1.414A2 2 0 0 1 9.828 16h4.344a2 2 0 0 1 1.414.586L17 18c.5.5 1 1 2 1a3 3 0 0 0 3-3c0-1.545-.604-6.584-.685-7.258-.007-.05-.011-.1-.017-.151A4 4 0 0 0 17.32 5z"></path></svg><span>Minigame</span></div>
+    <div data-b="0" class="fx fx-mask g-title" style="position:absolute;left:140px;top:168px;width:1000px"><span class="w"><i>Ai</i></span> <span class="w"><i>nhanh</i></span> <span class="w"><i>tay</i></span> <span class="w"><i>hơn?</i></span></div>
+    <div data-b="0" class="fx fx-rise lead" style="position:absolute;left:140px;top:312px;width:900px" >3 câu hỏi từ chính bài thuyết trình. Ai bấm chuông nhanh nhất sẽ giành quyền trả lời.</div>
+    <div data-b="0" class="fx fx-rise g-step" style="position:absolute;left:140px;top:446px;width:900px" ><div class="dot" style="width:76px;height:76px;background:linear-gradient(135deg,#00C4CC,#2E9BE6)"><svg class="ic" stroke="currentColor" fill="none" stroke-width="2" viewBox="0 0 24 24" stroke-linecap="round" stroke-linejoin="round" color="#fff" style="color:#fff" height="36" width="36" xmlns="http://www.w3.org/2000/svg"><path d="M17 12v4a1 1 0 0 1-1 1h-4"></path><path d="M17 3h2a2 2 0 0 1 2 2v2"></path><path d="M17 8V7"></path><path d="M21 17v2a2 2 0 0 1-2 2h-2"></path><path d="M3 7V5a2 2 0 0 1 2-2h2"></path><path d="M7 17h.01"></path><path d="M7 21H5a2 2 0 0 1-2-2v-2"></path><rect x="7" y="7" width="5" height="5" rx="1"></rect></svg></div><div><div class="h4">Quét mã QR</div><div class="p" style="font-size:24px;margin-top:2px">Mở camera điện thoại và quét mã bên phải</div></div></div><div data-b="0" class="fx fx-rise g-step" style="position:absolute;left:140px;top:570px;width:900px" ><div class="dot" style="width:76px;height:76px;background:linear-gradient(135deg,#2E9BE6,#5A32FA)"><svg class="ic" stroke="currentColor" fill="none" stroke-width="2" viewBox="0 0 24 24" stroke-linecap="round" stroke-linejoin="round" color="#fff" style="color:#fff" height="36" width="36" xmlns="http://www.w3.org/2000/svg"><circle cx="12" cy="8" r="5"></circle><path d="M20 21a8 8 0 0 0-16 0"></path></svg></div><div><div class="h4">Nhập tên của bạn</div><div class="p" style="font-size:24px;margin-top:2px">Tên sẽ hiện lên màn hình lớn khi bạn giành quyền</div></div></div><div data-b="0" class="fx fx-rise g-step" style="position:absolute;left:140px;top:694px;width:900px" ><div class="dot" style="width:76px;height:76px;background:linear-gradient(135deg,#5A32FA,#9B4BFF)"><svg class="ic" stroke="currentColor" fill="none" stroke-width="2" viewBox="0 0 24 24" stroke-linecap="round" stroke-linejoin="round" color="#fff" style="color:#fff" height="36" width="36" xmlns="http://www.w3.org/2000/svg"><path d="M6 8a6 6 0 0 1 12 0c0 7 3 9 3 9H3s3-2 3-9"></path><path d="M10.3 21a1.94 1.94 0 0 0 3.4 0"></path><path d="M4 2C2.8 3.7 2 5.7 2 8"></path><path d="M22 8c0-2.3-.8-4.3-2-6"></path></svg></div><div><div class="h4">Bấm chuông thật nhanh</div><div class="p" style="font-size:24px;margin-top:2px">Trả lời sai, quyền trả lời thuộc về người tiếp theo</div></div></div>
+    <div data-b="0" class="fx fx-rise g-count" style="position:absolute;left:140px;top:846px;width:330px" ><b class="g-n">0</b><span>người chơi<br>đã vào phòng</span></div>
+    <div data-b="0" class="fx fx-fade g-chips" style="position:absolute;left:480px;top:840px;width:660px;height:150px" ></div>
+    <div data-b="0" class="fx fx-pop g-qrcard" style="position:absolute;left:1220px;top:150px;width:560px;height:780px" ><div class="g-qr"></div><div class="g-url">…</div><div class="g-scan"><svg class="ic" stroke="currentColor" fill="none" stroke-width="2" viewBox="0 0 24 24" stroke-linecap="round" stroke-linejoin="round" color="#5A32FA" style="color:#5A32FA" height="26" width="26" xmlns="http://www.w3.org/2000/svg"><rect width="14" height="20" x="5" y="2" rx="2" ry="2"></rect><path d="M12 18h.01"></path></svg><span>Quét để tham gia</span></div></div>
+    <div class="flt" style="position:absolute;left:1100px;top:96px;width:190px;--fd:5.8s;--fdl:-4.6s"><img data-b="0" class="fx fx-pop " data-a="gamepad" alt=""  style="width:100%"></div><div class="flt" style="position:absolute;left:1700px;top:860px;width:120px;--fd:7.0s;--fdl:-1.0s"><img data-b="0" class="fx fx-pop " data-a="star" alt=""  style="width:100%"></div>
+  </section>
+<section class="slide g-qs" data-st="90" data-game="q" data-qi="0"><div class="bg"><div class="orb" style="left:900px;top:-300px;width:1200px;height:1200px;background:radial-gradient(closest-side, rgba(125,42,232,0.475) 0%, rgba(125,42,232,0.20900000000000002) 45%, rgba(125,42,232,0) 100%);--od:22s"></div><div class="orb" style="left:-200px;top:400px;width:1000px;height:1000px;background:radial-gradient(closest-side, rgba(0,196,204,0.325) 0%, rgba(0,196,204,0.14300000000000002) 45%, rgba(0,196,204,0) 100%);--od:28s"></div></div>
+    <div data-b="0" class="fx fx-rise g-tag" style="position:absolute;left:140px;top:96px" ><svg class="ic" stroke="currentColor" fill="none" stroke-width="2" viewBox="0 0 24 24" stroke-linecap="round" stroke-linejoin="round" color="#17134A" style="color:#17134A" height="24" width="24" xmlns="http://www.w3.org/2000/svg"><path d="M6 8a6 6 0 0 1 12 0c0 7 3 9 3 9H3s3-2 3-9"></path><path d="M10.3 21a1.94 1.94 0 0 0 3.4 0"></path><path d="M4 2C2.8 3.7 2 5.7 2 8"></path><path d="M22 8c0-2.3-.8-4.3-2-6"></path></svg><span>Câu 1/3</span></div>
+    <div data-b="0" class="fx fx-fade g-status" style="position:absolute;right:140px;top:96px" ><i></i><span>Chuẩn bị</span></div>
+    <div data-b="0" class="fx fx-mask g-q" style="position:absolute;left:140px;top:186px;width:1640px"><span class="w"><i>Sự</i></span> <span class="w"><i>kiện</i></span> <span class="w"><i>ra</i></span> <span class="w"><i>mắt</i></span> <span class="w"><i>chính</i></span> <span class="w"><i>thức</i></span> <span class="w"><i>Canva</i></span> <span class="w"><i>tại</i></span> <span class="w"><i>Việt</i></span> <span class="w"><i>Nam</i></span> <span class="w"><i>ngày</i></span> <span class="w"><i>24/04/2026</i></span> <span class="w"><i>có</i></span> <span class="w"><i>tên</i></span> <span class="w"><i>là</i></span> <span class="w"><i>gì?</i></span></div>
+    <div data-b="0" class="fx fx-rise g-opt" style="position:absolute;left:140px;top:418px;width:812px;height:150px" data-l="A" data-noadv><div class="g-l">A</div><div class="g-ot">Canva Create Việt Nam</div><div class="g-mk g-mk-x"><svg class="ic" stroke="currentColor" fill="none" stroke-width="2" viewBox="0 0 24 24" stroke-linecap="round" stroke-linejoin="round" color="#fff" style="color:#fff" height="34" width="34" xmlns="http://www.w3.org/2000/svg"><path d="M18 6 6 18"></path><path d="m6 6 12 12"></path></svg></div><div class="g-mk g-mk-v"><svg class="ic" stroke="currentColor" fill="none" stroke-width="2" viewBox="0 0 24 24" stroke-linecap="round" stroke-linejoin="round" color="#fff" style="color:#fff" height="34" width="34" xmlns="http://www.w3.org/2000/svg"><path d="M20 6 9 17l-5-5"></path></svg></div></div><div data-b="0" class="fx fx-rise g-opt" style="position:absolute;left:968px;top:418px;width:812px;height:150px" data-l="B" data-noadv><div class="g-l">B</div><div class="g-ot">Phường A.I Đồ</div><div class="g-mk g-mk-x"><svg class="ic" stroke="currentColor" fill="none" stroke-width="2" viewBox="0 0 24 24" stroke-linecap="round" stroke-linejoin="round" color="#fff" style="color:#fff" height="34" width="34" xmlns="http://www.w3.org/2000/svg"><path d="M18 6 6 18"></path><path d="m6 6 12 12"></path></svg></div><div class="g-mk g-mk-v"><svg class="ic" stroke="currentColor" fill="none" stroke-width="2" viewBox="0 0 24 24" stroke-linecap="round" stroke-linejoin="round" color="#fff" style="color:#fff" height="34" width="34" xmlns="http://www.w3.org/2000/svg"><path d="M20 6 9 17l-5-5"></path></svg></div></div><div data-b="0" class="fx fx-rise g-opt" style="position:absolute;left:140px;top:588px;width:812px;height:150px" data-l="C" data-noadv><div class="g-l">C</div><div class="g-ot">Sài Gòn Sáng Tạo</div><div class="g-mk g-mk-x"><svg class="ic" stroke="currentColor" fill="none" stroke-width="2" viewBox="0 0 24 24" stroke-linecap="round" stroke-linejoin="round" color="#fff" style="color:#fff" height="34" width="34" xmlns="http://www.w3.org/2000/svg"><path d="M18 6 6 18"></path><path d="m6 6 12 12"></path></svg></div><div class="g-mk g-mk-v"><svg class="ic" stroke="currentColor" fill="none" stroke-width="2" viewBox="0 0 24 24" stroke-linecap="round" stroke-linejoin="round" color="#fff" style="color:#fff" height="34" width="34" xmlns="http://www.w3.org/2000/svg"><path d="M20 6 9 17l-5-5"></path></svg></div></div><div data-b="0" class="fx fx-rise g-opt" style="position:absolute;left:968px;top:588px;width:812px;height:150px" data-l="D" data-noadv><div class="g-l">D</div><div class="g-ot">Canva AI Day</div><div class="g-mk g-mk-x"><svg class="ic" stroke="currentColor" fill="none" stroke-width="2" viewBox="0 0 24 24" stroke-linecap="round" stroke-linejoin="round" color="#fff" style="color:#fff" height="34" width="34" xmlns="http://www.w3.org/2000/svg"><path d="M18 6 6 18"></path><path d="m6 6 12 12"></path></svg></div><div class="g-mk g-mk-v"><svg class="ic" stroke="currentColor" fill="none" stroke-width="2" viewBox="0 0 24 24" stroke-linecap="round" stroke-linejoin="round" color="#fff" style="color:#fff" height="34" width="34" xmlns="http://www.w3.org/2000/svg"><path d="M20 6 9 17l-5-5"></path></svg></div></div>
+    <div data-b="0" class="fx fx-rise g-banner glass" style="position:absolute;left:140px;top:790px;width:1640px;height:200px" data-noadv><div class="gb-bell"><span class="gb-ring"></span><span class="gb-ring r2"></span><div class="gb-ic"><svg class="ic" stroke="currentColor" fill="none" stroke-width="2" viewBox="0 0 24 24" stroke-linecap="round" stroke-linejoin="round" color="#fff" style="color:#fff" height="60" width="60" xmlns="http://www.w3.org/2000/svg"><path d="M6 8a6 6 0 0 1 12 0c0 7 3 9 3 9H3s3-2 3-9"></path><path d="M10.3 21a1.94 1.94 0 0 0 3.4 0"></path><path d="M4 2C2.8 3.7 2 5.7 2 8"></path><path d="M22 8c0-2.3-.8-4.3-2-6"></path></svg></div></div>
+      <div class="gb-body"><div class="gb-in"><div class="gb-k">Chuẩn bị bấm chuông</div><div class="gb-v">3</div></div></div><div class="gb-side"></div></div>
+    <div class="g-stamp"><span></span></div><div class="g-fx"></div>
+  </section>
+<section class="slide g-qs" data-st="90" data-game="q" data-qi="1"><div class="bg"><div class="orb" style="left:900px;top:-300px;width:1200px;height:1200px;background:radial-gradient(closest-side, rgba(125,42,232,0.475) 0%, rgba(125,42,232,0.20900000000000002) 45%, rgba(125,42,232,0) 100%);--od:22s"></div><div class="orb" style="left:-200px;top:400px;width:1000px;height:1000px;background:radial-gradient(closest-side, rgba(0,196,204,0.325) 0%, rgba(0,196,204,0.14300000000000002) 45%, rgba(0,196,204,0) 100%);--od:28s"></div></div>
+    <div data-b="0" class="fx fx-rise g-tag" style="position:absolute;left:140px;top:96px" ><svg class="ic" stroke="currentColor" fill="none" stroke-width="2" viewBox="0 0 24 24" stroke-linecap="round" stroke-linejoin="round" color="#17134A" style="color:#17134A" height="24" width="24" xmlns="http://www.w3.org/2000/svg"><path d="M6 8a6 6 0 0 1 12 0c0 7 3 9 3 9H3s3-2 3-9"></path><path d="M10.3 21a1.94 1.94 0 0 0 3.4 0"></path><path d="M4 2C2.8 3.7 2 5.7 2 8"></path><path d="M22 8c0-2.3-.8-4.3-2-6"></path></svg><span>Câu 2/3</span></div>
+    <div data-b="0" class="fx fx-fade g-status" style="position:absolute;right:140px;top:96px" ><i></i><span>Chuẩn bị</span></div>
+    <div data-b="0" class="fx fx-mask g-q" style="position:absolute;left:140px;top:186px;width:1640px"><span class="w"><i>Canva</i></span> <span class="w"><i>AI</i></span> <span class="w"><i>2.0</i></span> <span class="w"><i>có</i></span> <span class="w"><i>mặt</i></span> <span class="w"><i>tại</i></span> <span class="w"><i>Việt</i></span> <span class="w"><i>Nam</i></span> <span class="w"><i>bao</i></span> <span class="w"><i>nhiêu</i></span> <span class="w"><i>ngày</i></span> <span class="w"><i>sau</i></span> <span class="w"><i>khi</i></span> <span class="w"><i>ra</i></span> <span class="w"><i>mắt</i></span> <span class="w"><i>toàn</i></span> <span class="w"><i>cầu?</i></span></div>
+    <div data-b="0" class="fx fx-rise g-opt" style="position:absolute;left:140px;top:418px;width:812px;height:150px" data-l="A" data-noadv><div class="g-l">A</div><div class="g-ot">3 ngày</div><div class="g-mk g-mk-x"><svg class="ic" stroke="currentColor" fill="none" stroke-width="2" viewBox="0 0 24 24" stroke-linecap="round" stroke-linejoin="round" color="#fff" style="color:#fff" height="34" width="34" xmlns="http://www.w3.org/2000/svg"><path d="M18 6 6 18"></path><path d="m6 6 12 12"></path></svg></div><div class="g-mk g-mk-v"><svg class="ic" stroke="currentColor" fill="none" stroke-width="2" viewBox="0 0 24 24" stroke-linecap="round" stroke-linejoin="round" color="#fff" style="color:#fff" height="34" width="34" xmlns="http://www.w3.org/2000/svg"><path d="M20 6 9 17l-5-5"></path></svg></div></div><div data-b="0" class="fx fx-rise g-opt" style="position:absolute;left:968px;top:418px;width:812px;height:150px" data-l="B" data-noadv><div class="g-l">B</div><div class="g-ot">30 ngày</div><div class="g-mk g-mk-x"><svg class="ic" stroke="currentColor" fill="none" stroke-width="2" viewBox="0 0 24 24" stroke-linecap="round" stroke-linejoin="round" color="#fff" style="color:#fff" height="34" width="34" xmlns="http://www.w3.org/2000/svg"><path d="M18 6 6 18"></path><path d="m6 6 12 12"></path></svg></div><div class="g-mk g-mk-v"><svg class="ic" stroke="currentColor" fill="none" stroke-width="2" viewBox="0 0 24 24" stroke-linecap="round" stroke-linejoin="round" color="#fff" style="color:#fff" height="34" width="34" xmlns="http://www.w3.org/2000/svg"><path d="M20 6 9 17l-5-5"></path></svg></div></div><div data-b="0" class="fx fx-rise g-opt" style="position:absolute;left:140px;top:588px;width:812px;height:150px" data-l="C" data-noadv><div class="g-l">C</div><div class="g-ot">8 ngày</div><div class="g-mk g-mk-x"><svg class="ic" stroke="currentColor" fill="none" stroke-width="2" viewBox="0 0 24 24" stroke-linecap="round" stroke-linejoin="round" color="#fff" style="color:#fff" height="34" width="34" xmlns="http://www.w3.org/2000/svg"><path d="M18 6 6 18"></path><path d="m6 6 12 12"></path></svg></div><div class="g-mk g-mk-v"><svg class="ic" stroke="currentColor" fill="none" stroke-width="2" viewBox="0 0 24 24" stroke-linecap="round" stroke-linejoin="round" color="#fff" style="color:#fff" height="34" width="34" xmlns="http://www.w3.org/2000/svg"><path d="M20 6 9 17l-5-5"></path></svg></div></div><div data-b="0" class="fx fx-rise g-opt" style="position:absolute;left:968px;top:588px;width:812px;height:150px" data-l="D" data-noadv><div class="g-l">D</div><div class="g-ot">100 ngày</div><div class="g-mk g-mk-x"><svg class="ic" stroke="currentColor" fill="none" stroke-width="2" viewBox="0 0 24 24" stroke-linecap="round" stroke-linejoin="round" color="#fff" style="color:#fff" height="34" width="34" xmlns="http://www.w3.org/2000/svg"><path d="M18 6 6 18"></path><path d="m6 6 12 12"></path></svg></div><div class="g-mk g-mk-v"><svg class="ic" stroke="currentColor" fill="none" stroke-width="2" viewBox="0 0 24 24" stroke-linecap="round" stroke-linejoin="round" color="#fff" style="color:#fff" height="34" width="34" xmlns="http://www.w3.org/2000/svg"><path d="M20 6 9 17l-5-5"></path></svg></div></div>
+    <div data-b="0" class="fx fx-rise g-banner glass" style="position:absolute;left:140px;top:790px;width:1640px;height:200px" data-noadv><div class="gb-bell"><span class="gb-ring"></span><span class="gb-ring r2"></span><div class="gb-ic"><svg class="ic" stroke="currentColor" fill="none" stroke-width="2" viewBox="0 0 24 24" stroke-linecap="round" stroke-linejoin="round" color="#fff" style="color:#fff" height="60" width="60" xmlns="http://www.w3.org/2000/svg"><path d="M6 8a6 6 0 0 1 12 0c0 7 3 9 3 9H3s3-2 3-9"></path><path d="M10.3 21a1.94 1.94 0 0 0 3.4 0"></path><path d="M4 2C2.8 3.7 2 5.7 2 8"></path><path d="M22 8c0-2.3-.8-4.3-2-6"></path></svg></div></div>
+      <div class="gb-body"><div class="gb-in"><div class="gb-k">Chuẩn bị bấm chuông</div><div class="gb-v">3</div></div></div><div class="gb-side"></div></div>
+    <div class="g-stamp"><span></span></div><div class="g-fx"></div>
+  </section>
+<section class="slide g-qs" data-st="90" data-game="q" data-qi="2"><div class="bg"><div class="orb" style="left:900px;top:-300px;width:1200px;height:1200px;background:radial-gradient(closest-side, rgba(125,42,232,0.475) 0%, rgba(125,42,232,0.20900000000000002) 45%, rgba(125,42,232,0) 100%);--od:22s"></div><div class="orb" style="left:-200px;top:400px;width:1000px;height:1000px;background:radial-gradient(closest-side, rgba(0,196,204,0.325) 0%, rgba(0,196,204,0.14300000000000002) 45%, rgba(0,196,204,0) 100%);--od:28s"></div></div>
+    <div data-b="0" class="fx fx-rise g-tag" style="position:absolute;left:140px;top:96px" ><svg class="ic" stroke="currentColor" fill="none" stroke-width="2" viewBox="0 0 24 24" stroke-linecap="round" stroke-linejoin="round" color="#17134A" style="color:#17134A" height="24" width="24" xmlns="http://www.w3.org/2000/svg"><path d="M6 8a6 6 0 0 1 12 0c0 7 3 9 3 9H3s3-2 3-9"></path><path d="M10.3 21a1.94 1.94 0 0 0 3.4 0"></path><path d="M4 2C2.8 3.7 2 5.7 2 8"></path><path d="M22 8c0-2.3-.8-4.3-2-6"></path></svg><span>Câu 3/3</span></div>
+    <div data-b="0" class="fx fx-fade g-status" style="position:absolute;right:140px;top:96px" ><i></i><span>Chuẩn bị</span></div>
+    <div data-b="0" class="fx fx-mask g-q" style="position:absolute;left:140px;top:186px;width:1640px"><span class="w"><i>Tại</i></span> <span class="w"><i>sự</i></span> <span class="w"><i>kiện</i></span> <span class="w"><i>ra</i></span> <span class="w"><i>mắt,</i></span> <span class="w"><i>Canva</i></span> <span class="w"><i>công</i></span> <span class="w"><i>bố</i></span> <span class="w"><i>bao</i></span> <span class="w"><i>nhiêu</i></span> <span class="w"><i>font</i></span> <span class="w"><i>tiếng</i></span> <span class="w"><i>Việt</i></span> <span class="w"><i>mới?</i></span></div>
+    <div data-b="0" class="fx fx-rise g-opt" style="position:absolute;left:140px;top:418px;width:812px;height:150px" data-l="A" data-noadv><div class="g-l">A</div><div class="g-ot">Hơn 50 font</div><div class="g-mk g-mk-x"><svg class="ic" stroke="currentColor" fill="none" stroke-width="2" viewBox="0 0 24 24" stroke-linecap="round" stroke-linejoin="round" color="#fff" style="color:#fff" height="34" width="34" xmlns="http://www.w3.org/2000/svg"><path d="M18 6 6 18"></path><path d="m6 6 12 12"></path></svg></div><div class="g-mk g-mk-v"><svg class="ic" stroke="currentColor" fill="none" stroke-width="2" viewBox="0 0 24 24" stroke-linecap="round" stroke-linejoin="round" color="#fff" style="color:#fff" height="34" width="34" xmlns="http://www.w3.org/2000/svg"><path d="M20 6 9 17l-5-5"></path></svg></div></div><div data-b="0" class="fx fx-rise g-opt" style="position:absolute;left:968px;top:418px;width:812px;height:150px" data-l="B" data-noadv><div class="g-l">B</div><div class="g-ot">Hơn 150 font</div><div class="g-mk g-mk-x"><svg class="ic" stroke="currentColor" fill="none" stroke-width="2" viewBox="0 0 24 24" stroke-linecap="round" stroke-linejoin="round" color="#fff" style="color:#fff" height="34" width="34" xmlns="http://www.w3.org/2000/svg"><path d="M18 6 6 18"></path><path d="m6 6 12 12"></path></svg></div><div class="g-mk g-mk-v"><svg class="ic" stroke="currentColor" fill="none" stroke-width="2" viewBox="0 0 24 24" stroke-linecap="round" stroke-linejoin="round" color="#fff" style="color:#fff" height="34" width="34" xmlns="http://www.w3.org/2000/svg"><path d="M20 6 9 17l-5-5"></path></svg></div></div><div data-b="0" class="fx fx-rise g-opt" style="position:absolute;left:140px;top:588px;width:812px;height:150px" data-l="C" data-noadv><div class="g-l">C</div><div class="g-ot">Hơn 300 font</div><div class="g-mk g-mk-x"><svg class="ic" stroke="currentColor" fill="none" stroke-width="2" viewBox="0 0 24 24" stroke-linecap="round" stroke-linejoin="round" color="#fff" style="color:#fff" height="34" width="34" xmlns="http://www.w3.org/2000/svg"><path d="M18 6 6 18"></path><path d="m6 6 12 12"></path></svg></div><div class="g-mk g-mk-v"><svg class="ic" stroke="currentColor" fill="none" stroke-width="2" viewBox="0 0 24 24" stroke-linecap="round" stroke-linejoin="round" color="#fff" style="color:#fff" height="34" width="34" xmlns="http://www.w3.org/2000/svg"><path d="M20 6 9 17l-5-5"></path></svg></div></div><div data-b="0" class="fx fx-rise g-opt" style="position:absolute;left:968px;top:588px;width:812px;height:150px" data-l="D" data-noadv><div class="g-l">D</div><div class="g-ot">Hơn 500 font</div><div class="g-mk g-mk-x"><svg class="ic" stroke="currentColor" fill="none" stroke-width="2" viewBox="0 0 24 24" stroke-linecap="round" stroke-linejoin="round" color="#fff" style="color:#fff" height="34" width="34" xmlns="http://www.w3.org/2000/svg"><path d="M18 6 6 18"></path><path d="m6 6 12 12"></path></svg></div><div class="g-mk g-mk-v"><svg class="ic" stroke="currentColor" fill="none" stroke-width="2" viewBox="0 0 24 24" stroke-linecap="round" stroke-linejoin="round" color="#fff" style="color:#fff" height="34" width="34" xmlns="http://www.w3.org/2000/svg"><path d="M20 6 9 17l-5-5"></path></svg></div></div>
+    <div data-b="0" class="fx fx-rise g-banner glass" style="position:absolute;left:140px;top:790px;width:1640px;height:200px" data-noadv><div class="gb-bell"><span class="gb-ring"></span><span class="gb-ring r2"></span><div class="gb-ic"><svg class="ic" stroke="currentColor" fill="none" stroke-width="2" viewBox="0 0 24 24" stroke-linecap="round" stroke-linejoin="round" color="#fff" style="color:#fff" height="60" width="60" xmlns="http://www.w3.org/2000/svg"><path d="M6 8a6 6 0 0 1 12 0c0 7 3 9 3 9H3s3-2 3-9"></path><path d="M10.3 21a1.94 1.94 0 0 0 3.4 0"></path><path d="M4 2C2.8 3.7 2 5.7 2 8"></path><path d="M22 8c0-2.3-.8-4.3-2-6"></path></svg></div></div>
+      <div class="gb-body"><div class="gb-in"><div class="gb-k">Chuẩn bị bấm chuông</div><div class="gb-v">3</div></div></div><div class="gb-side"></div></div>
+    <div class="g-stamp"><span></span></div><div class="g-fx"></div>
+  </section>
+<section class="slide g-res" data-st="160" data-game="res"><div class="bg"><div class="orb" style="left:850px;top:-150px;width:1300px;height:1300px;background:radial-gradient(closest-side, rgba(125,42,232,0.5) 0%, rgba(125,42,232,0.22000000000000003) 45%, rgba(125,42,232,0) 100%);--od:22s"></div><div class="orb" style="left:-250px;top:550px;width:900px;height:900px;background:radial-gradient(closest-side, rgba(0,196,204,0.3125) 0%, rgba(0,196,204,0.1375) 45%, rgba(0,196,204,0) 100%);--od:26s"></div></div>
+    <div data-b="0" class="fx fx-mask h1" style="position:absolute;left:140px;top:104px;width:1640px"><span class="w"><i>Bảng</i></span> <span class="w"><i>vinh</i></span> <span class="w"><i>danh</i></span></div><div data-b="0" class="fx fx-rise lead" style="position:absolute;left:140px;top:204px;width:1640px" >Những người nhanh tay và chính xác nhất hôm nay</div>
+    <div data-b="0" class="fx fx-rise g-row glass" style="position:absolute;left:140px;top:330px;width:1640px;height:170px" ><div class="g-rn">Câu 1</div><div class="g-rq">Sự kiện ra mắt chính thức Canva tại Việt Nam ngày 24/04/2026 có tên là gì?</div><div class="g-rw" data-w="0"><span class="g-rwn">Chưa có người trả lời đúng</span></div></div><div data-b="0" class="fx fx-rise g-row glass" style="position:absolute;left:140px;top:526px;width:1640px;height:170px" ><div class="g-rn">Câu 2</div><div class="g-rq">Canva AI 2.0 có mặt tại Việt Nam bao nhiêu ngày sau khi ra mắt toàn cầu?</div><div class="g-rw" data-w="1"><span class="g-rwn">Chưa có người trả lời đúng</span></div></div><div data-b="0" class="fx fx-rise g-row glass" style="position:absolute;left:140px;top:722px;width:1640px;height:170px" ><div class="g-rn">Câu 3</div><div class="g-rq">Tại sự kiện ra mắt, Canva công bố bao nhiêu font tiếng Việt mới?</div><div class="g-rw" data-w="2"><span class="g-rwn">Chưa có người trả lời đúng</span></div></div>
+    <div class="flt" style="position:absolute;left:1640px;top:80px;width:150px;--fd:7.0s;--fdl:-2.0s"><img data-b="0" class="fx fx-pop " data-a="coin" alt=""  style="width:100%"></div>
+  </section>
+<section class="slide divider"  ><div class="bg"><div class="orb" style="left:650px;top:-150px;width:1500px;height:1500px;background:radial-gradient(closest-side, rgba(125,42,232,0.6875) 0%, rgba(125,42,232,0.30250000000000005) 45%, rgba(125,42,232,0) 100%);--od:22s"></div><div class="orb" style="left:-100px;top:-400px;width:1200px;height:1200px;background:radial-gradient(closest-side, rgba(0,196,204,0.475) 0%, rgba(0,196,204,0.20900000000000002) 45%, rgba(0,196,204,0) 100%);--od:28s"></div><div class="orb" style="left:-200px;top:600px;width:1000px;height:1000px;background:radial-gradient(closest-side, rgba(90,50,250,0.5625) 0%, rgba(90,50,250,0.24750000000000003) 45%, rgba(90,50,250,0) 100%);--od:24s"></div></div>
+  <div data-b="0" class="fx fx-mask thanks" style="position:absolute;left:110px;top:120px;width:1700px"><span class="w"><i>Cảm</i></span> <span class="w"><i>ơn!</i></span></div>
+  <div class="flt" style="position:absolute;left:1170px;top:400px;width:700px;--fd:5.0s;--fdl:-2.0s"><img data-b="0" class="fx fx-pop " data-a="smiley" alt=""  style="width:100%"></div>
+  <div data-b="0" class="fx fx-rise pill" style="position:absolute;left:140px;top:560px;background:#FFD400;color:#17134A;font-size:30px;padding:12px 32px" >Hỏi và đáp</div>
+  <div data-b="0" class="fx fx-rise thx-q" style="position:absolute;left:140px;top:680px;width:1000px" >Để mỗi người Việt thấy mình trong từng thiết kế, hơn cả tưởng tượng.</div>
+  <img data-b="0" class="fx fx-rise " data-a="wordmark" alt=""  style="position:absolute;left:140px;top:900px;width:220px">
+</section>
+<section class="slide "  ><div class="bg"><div class="orb" style="left:1200px;top:400px;width:1000px;height:1000px;background:radial-gradient(closest-side, rgba(125,42,232,0.275) 0%, rgba(125,42,232,0.12100000000000001) 45%, rgba(125,42,232,0) 100%);--od:22s"></div></div>
+    <div data-b="0" class="fx fx-mask h1" style="position:absolute;left:140px;top:104px;width:1200px"><span class="w"><i>Nguồn</i></span> <span class="w"><i>tham</i></span> <span class="w"><i>khảo</i></span></div>
+    <div data-b="0" class="fx fx-rise refs" style="position:absolute;left:140px;top:240px;width:800px" ><ol start="1"><li>Advertising Vietnam (28/4/2026), Canva đưa sáng tạo ứng dụng AI tại Việt Nam bước vào kỷ nguyên mới</li><li>Vietcetera, Kỷ nguyên sáng tạo mới: Canva chính thức chào sân Việt Nam</li><li>VnEconomy (29/4/2026), Australian unicorn unveils three strategic pillars in Vietnam</li><li>Báo Đầu tư, Canva đổ bộ Việt Nam, nhắm tới thị trường 20 triệu thiết kế mỗi tháng</li><li>CafeF (28/4/2026), Canva nói gì sau sự kiện ra mắt tại Việt Nam gây thất vọng?</li><li>CafeF (28/4/2026), Canva Vietnam nói gì khi bị chỉ trích cẩu thả?</li><li>CafeF / ĐS&PL (31/8/2026), AI đang biến 200 triệu người dùng miễn phí của Canva thành gánh nặng</li><li>Mekong ASEAN (25/8/2026), Giáo viên, học sinh sẽ được cấp tài khoản Canva giáo dục miễn phí</li><li>Thanh Niên (25/4/2026), Cấp miễn phí tài khoản Canva cho tất cả giáo viên Việt Nam</li></ol></div>
+    <div data-b="0" class="fx fx-rise refs" style="position:absolute;left:1000px;top:240px;width:780px" ><ol start="10"><li>VnEconomy (12/12/2025), HCM City, Canva sign strategic cooperation deal</li><li>Saigoneer, Canva Vietnam Launching Event: Phường A.I Đồ @ Thủ Thiêm Riverstage</li><li>TechCrunch (18/2/2026), Canva gets to $4B in revenue as LLM referral traffic rises</li><li>Sacra, Canva at $4B ARR growing 43% YoY</li><li>Canva Newsroom (4/2026), Introducing Canva AI 2.0</li><li>Business Wire (8/2024), Canva Unveils Refreshed Brand</li><li>Creative Bloq, New Canva logo is a triumph; 1000logos, Canva logo</li><li>Marketech APAC, chiến dịch “NyatAIn di Canva” tại Indonesia</li><li>Canva Vietnam, UGC Brief Canva AI (màu sắc chuẩn, element thiết kế)</li></ol></div>
+  </section><div id="mm"></div></div><div id="hud" role="toolbar" aria-label="Điều khiển trình chiếu">
+  <button id="bPrev" aria-label="Slide trước"><svg class="ic" stroke="currentColor" fill="none" stroke-width="2" viewBox="0 0 24 24" stroke-linecap="round" stroke-linejoin="round" color="#fff" style="color:#fff" height="22" width="22" xmlns="http://www.w3.org/2000/svg"><path d="m15 18-6-6 6-6"></path></svg></button><span id="hudN">1 / 24</span>
+  <button id="bNext" aria-label="Tiếp theo"><svg class="ic" stroke="currentColor" fill="none" stroke-width="2" viewBox="0 0 24 24" stroke-linecap="round" stroke-linejoin="round" color="#fff" style="color:#fff" height="22" width="22" xmlns="http://www.w3.org/2000/svg"><path d="m9 18 6-6-6-6"></path></svg></button><button id="bFs" aria-label="Toàn màn hình"><svg class="ic" stroke="currentColor" fill="none" stroke-width="2" viewBox="0 0 24 24" stroke-linecap="round" stroke-linejoin="round" color="#fff" style="color:#fff" height="19" width="19" xmlns="http://www.w3.org/2000/svg"><path d="M8 3H5a2 2 0 0 0-2 2v3"></path><path d="M21 8V5a2 2 0 0 0-2-2h-3"></path><path d="M3 16v3a2 2 0 0 0 2 2h3"></path><path d="M16 21h3a2 2 0 0 0 2-2v-3"></path></svg></button></div>
+<div id="gpanel" role="toolbar" aria-label="Điều khiển minigame"><div class="gp-st"><i></i><span>Đang kết nối…</span></div>
+  <button data-act="reopen" title="Phím O"><svg class="ic" stroke="currentColor" fill="none" stroke-width="2" viewBox="0 0 24 24" stroke-linecap="round" stroke-linejoin="round" color="#fff" style="color:#fff" height="18" width="18" xmlns="http://www.w3.org/2000/svg"><path d="M3 12a9 9 0 1 0 9-9 9.75 9.75 0 0 0-6.74 2.74L3 8"></path><path d="M3 3v5h5"></path></svg><span>Mở lại chuông</span></button>
+  <button data-act="reveal" title="Phím S"><svg class="ic" stroke="currentColor" fill="none" stroke-width="2" viewBox="0 0 24 24" stroke-linecap="round" stroke-linejoin="round" color="#fff" style="color:#fff" height="18" width="18" xmlns="http://www.w3.org/2000/svg"><path d="M2.062 12.348a1 1 0 0 1 0-.696 10.75 10.75 0 0 1 19.876 0 1 1 0 0 1 0 .696 10.75 10.75 0 0 1-19.876 0"></path><circle cx="12" cy="12" r="3"></circle></svg><span>Hiện đáp án</span></button>
+  <button data-act="mute" title="Phím M"><svg class="ic" stroke="currentColor" fill="none" stroke-width="2" viewBox="0 0 24 24" stroke-linecap="round" stroke-linejoin="round" color="#fff" style="color:#fff" height="18" width="18" xmlns="http://www.w3.org/2000/svg"><path d="M11 4.702a.705.705 0 0 0-1.203-.498L6.413 7.587A1.4 1.4 0 0 1 5.416 8H3a1 1 0 0 0-1 1v6a1 1 0 0 0 1 1h2.416a1.4 1.4 0 0 1 .997.413l3.383 3.384A.705.705 0 0 0 11 19.298z"></path><path d="M16 9a5 5 0 0 1 0 6"></path><path d="M19.364 18.364a9 9 0 0 0 0-12.728"></path></svg><span>Âm thanh</span></button>
+  <button data-act="reset" class="gp-danger"><svg class="ic" stroke="currentColor" fill="none" stroke-width="2" viewBox="0 0 24 24" stroke-linecap="round" stroke-linejoin="round" color="#fff" style="color:#fff" height="18" width="18" xmlns="http://www.w3.org/2000/svg"><path d="M3 6h18"></path><path d="M19 6v14c0 1-1 2-2 2H7c-1 0-2-1-2-2V6"></path><path d="M8 6V4c0-1 1-2 2-2h4c1 0 2 1 2 2v2"></path><line x1="10" x2="10" y1="11" y2="17"></line><line x1="14" x2="14" y1="11" y2="17"></line></svg><span>Reset game</span></button>
+  <div class="gp-hint"></div></div>
+<div id="bar"></div><div id="black"></div><div id="loading">Đang tải…</div><script>window.__A={"ribbon":"assets/ribbon.png","racket":"assets/racket.png","gamepad":"assets/gamepad.png","aa":"assets/aa.png","clapper":"assets/clapper.png","aperture":"assets/aperture.png","star":"assets/star.png","plane":"assets/plane.png","vr":"assets/vr.png","csphere":"assets/csphere.png","coinblur":"assets/coinblur.png","wordmark":"assets/wordmark.png","coin":"assets/coin.png","sphere":"assets/sphere.png","ring":"assets/ring.png","bluestar":"assets/bluestar.png","eyes_lips":"assets/eyes_lips.png","eyes_mus":"assets/eyes_mus.png","smiley":"assets/smiley.png"}</script><script src="questions.js"></script><script>// Runs before the slide engine: syncs minigame slides with questions.js (so questions can be edited without rebuilding).
+(() => {
+  const Q = window.QUESTIONS;
+  if (!Array.isArray(Q) || !Q.length) return;
+  const esc = (t) => String(t).replace(/&/g, "&amp;").replace(/</g, "&lt;");
+  const words = (t) => String(t).split(" ").map((w) => `<span class="w"><i>${esc(w)}</i></span>`).join(" ");
+  const qs = [...document.querySelectorAll('.slide[data-game="q"]')];
+  qs.forEach((s, i) => {
+    if (i >= Q.length) { s.remove(); return; }
+    const q = Q[i], n = Math.min(Q.length, qs.length);
+    s.querySelector(".g-q").innerHTML = words(q.q);
+    const tag = s.querySelector(".g-tag span"); if (tag) tag.textContent = `Câu ${i + 1}/${n}`;
+    s.querySelectorAll(".g-opt").forEach((o, j) => { o.querySelector(".g-ot").textContent = (q.options || [])[j] || ""; o.style.display = (q.options || [])[j] ? "" : "none"; });
+  });
+  document.querySelectorAll('.slide[data-game="res"] .g-row').forEach((r, i) => {
+    if (i >= Q.length) { r.remove(); return; }
+    r.querySelector(".g-rq").textContent = Q[i].q;
+  });
+})();
+</script><script>(() => {
+"use strict";
+const body = document.body, stage = document.getElementById("stage"), mm = document.getElementById("mm");
+const slides = [...stage.querySelectorAll(".slide")], N = slides.length;
+const RM = matchMedia("(prefers-reduced-motion: reduce)").matches;
+const PRINT = /[?&]print/.test(location.search);
+const ENTER_BASE = 380;
+let cur = -1, step = 0, token = 0, mmJob = null;
+const counters = new Map(); // el -> raf id
+
+// ───────── precompute build groups ─────────
+const info = slides.map((s) => {
+  const groups = new Map();
+  s.querySelectorAll("[data-b]").forEach((el) => {
+    const b = +el.dataset.b;
+    if (!groups.has(b)) groups.set(b, []);
+    groups.get(b).push(el);
+  });
+  const stg = +(s.dataset.st || 110);
+  for (const els of groups.values()) {
+    const norm = els.filter((e) => !e.classList.contains("selp"));
+    const sel = els.filter((e) => e.classList.contains("selp"));
+    norm.forEach((e, i) => { e._d = e.dataset.d !== undefined ? +e.dataset.d : i * stg; });
+    const s0 = norm.length ? Math.max(...norm.map((e) => e._d)) + 520 : 0;
+    let h = 0;
+    sel.forEach((e) => {
+      e._d = s0 + (e.classList.contains("selbox") ? 0 : e.classList.contains("handle") ? 380 + 70 * h++ : e.classList.contains("cursor") ? 140 : 980);
+    });
+    els.forEach((e) => { e._words = [...e.querySelectorAll(".w>i")]; e._counts = e.classList.contains("count") ? [e] : [...e.querySelectorAll(".count")]; });
+  }
+  const max = groups.size ? Math.max(...groups.keys()) : 0;
+  return { groups, max };
+});
+
+// ───────── layout ─────────
+function fit() {
+  const w = document.documentElement.clientWidth || innerWidth, h = document.documentElement.clientHeight || innerHeight;
+  stage.style.setProperty("--s", Math.min(w / 1920, h / 1080));
+}
+["resize", "orientationchange", "fullscreenchange", "webkitfullscreenchange"].forEach((ev) => addEventListener(ev, () => { fit(); requestAnimationFrame(fit); }));
+document.addEventListener("fullscreenchange", fit); document.addEventListener("webkitfullscreenchange", fit);
+
+// ───────── count-up ─────────
+function fmt(el, n) {
+  const sep = el.dataset.sep === "1";
+  const s = sep ? String(n).replace(/\B(?=(\d{3})+(?!\d))/g, ".") : String(n);
+  return (el.dataset.pre || "") + s + (el.dataset.suf || "");
+}
+function stopCount(el) { if (counters.has(el)) { cancelAnimationFrame(counters.get(el)); counters.delete(el); } el.textContent = fmt(el, +el.dataset.to); }
+function runCount(el, delay) {
+  stopCount(el);
+  if (RM) return;
+  const to = +el.dataset.to, dur = 1700;
+  el.textContent = fmt(el, 0);
+  let t0 = null;
+  const tick = (ts) => {
+    if (t0 === null) t0 = ts + delay;
+    const p = Math.min(1, Math.max(0, (ts - t0) / dur));
+    const e = p === 1 ? 1 : 1 - Math.pow(2, -10 * p);
+    el.textContent = fmt(el, Math.round(to * e));
+    if (p < 1) counters.set(el, requestAnimationFrame(tick)); else counters.delete(el);
+  };
+  counters.set(el, requestAnimationFrame(tick));
+}
+
+// ───────── builds ─────────
+function setOn(el, on, delay) {
+  const d = on ? delay + "ms" : "0ms";
+  el.style.transitionDelay = d;
+  el._words.forEach((w, j) => (w.style.transitionDelay = on ? delay + j * 65 + "ms" : "0ms"));
+  el.classList.toggle("on", on);
+}
+// animate=true: transition newly visible elements; false: snap to state
+function apply(si, k, animate, base = 0, skip) {
+  const s = slides[si], { groups } = info[si];
+  if (!animate) s.classList.add("notr");
+  for (const [b, els] of groups) {
+    const on = b <= k;
+    for (const el of els) {
+      const was = el.classList.contains("on");
+      if (skip && skip.has(el)) { el.classList.add("on"); continue; }
+      if (on && !was) {
+        const d = animate ? base + el._d : 0;
+        setOn(el, true, d);
+        el._counts.forEach((c) => (animate ? runCount(c, d + 120) : stopCount(c)));
+      } else if (!on && was) {
+        setOn(el, false, 0);
+        el._counts.forEach(stopCount);
+      } else if (on && !animate) el._counts.forEach(stopCount);
+    }
+  }
+  if (!animate) { void s.offsetWidth; s.classList.remove("notr"); }
+}
+
+// ───────── magic move (shared elements between consecutive slides) ─────────
+function layoutRect(el, root) {
+  let x = 0, y = 0, n = el;
+  while (n && n !== root) { x += n.offsetLeft; y += n.offsetTop; n = n.offsetParent; }
+  return { x, y, w: el.offsetWidth, h: el.offsetHeight };
+}
+function finishMagic() {
+  if (!mmJob) return;
+  clearTimeout(mmJob.t);
+  mmJob.clones.forEach((c) => c.remove());
+  mmJob.targets.forEach((t) => t.classList.remove("mm-wait"));
+  mmJob.sources.forEach((s) => (s.style.visibility = ""));
+  mmJob = null;
+}
+function magic(ai, bi) {
+  const skip = new Set();
+  if (RM || ai < 0) return skip;
+  const A = slides[ai], B = slides[bi];
+  const job = { clones: [], targets: [], sources: [], t: 0 };
+  B.querySelectorAll("[data-key]").forEach((y) => {
+    const x = A.querySelector(`[data-key="${y.dataset.key}"]`);
+    if (!x || !x.offsetWidth) return;
+    const isImg = y.tagName === "IMG";
+    const rx = layoutRect(x, A), ry = layoutRect(y, B);
+    const k = isImg ? ry.w / rx.w : parseFloat(getComputedStyle(y).fontSize) / parseFloat(getComputedStyle(x).fontSize);
+    const mk = (src, r) => {
+      const c = src.cloneNode(true);
+      c.removeAttribute("data-b"); c.removeAttribute("data-key");
+      c.classList.remove("fx", "on", "fx-zoom", "fx-wipe", "fx-fade", "fx-rise", "fx-pop");
+      const cs = getComputedStyle(src);
+      Object.assign(c.style, { left: r.x + "px", top: r.y + "px", width: r.w + "px", height: isImg ? r.h + "px" : "auto", transition: "none", transitionDelay: "0s",
+        fontSize: cs.fontSize, lineHeight: cs.lineHeight, fontWeight: cs.fontWeight, letterSpacing: cs.letterSpacing, color: cs.color, webkitTextStroke: cs.webkitTextStroke, whiteSpace: "nowrap", clipPath: "none", webkitClipPath: "none" });
+      mm.appendChild(c); job.clones.push(c);
+      return c;
+    };
+    const cx = mk(x, rx);
+    const dx = ry.x - rx.x, dy = ry.y - rx.y;
+    let cy = null;
+    if (!isImg) { cy = mk(y, ry); cy.style.transform = `translate3d(${-dx}px,${-dy}px,0) scale(${1 / k})`; cy.style.opacity = "0"; }
+    x.style.visibility = "hidden"; job.sources.push(x);
+    y.classList.add("mm-wait"); job.targets.push(y); skip.add(y);
+    void mm.offsetWidth;
+    const tr = "transform 1.3s cubic-bezier(.65,0,.35,1), opacity 1.3s cubic-bezier(.65,0,.35,1)";
+    cx.style.transition = tr; cx.style.transform = `translate3d(${dx}px,${dy}px,0) scale(${k})`;
+    if (cy) { cx.style.opacity = "0"; cy.style.transition = tr; cy.style.transform = "none"; cy.style.opacity = "1"; }
+  });
+  if (job.clones.length) { mmJob = job; job.t = setTimeout(finishMagic, 1380); }
+  return skip;
+}
+
+// ───────── navigation ─────────
+function snapHide(s) {
+  s.classList.add("notr");
+  s.classList.remove("cur", "out-f", "out-b", "pre-f", "pre-b");
+  void s.offsetWidth;
+  s.classList.remove("notr");
+}
+function goTo(i, dir) {
+  if (i < 0 || i >= N) return;
+  finishMagic();
+  const old = cur, my = ++token;
+  slides.forEach((s, k) => { if (k !== old && k !== i) snapHide(s); });
+  const B = slides[i];
+  // prepare incoming in its start pose, without transitions
+  B.classList.add("notr");
+  B.classList.remove("cur", "out-f", "out-b", "pre-f", "pre-b");
+  B.classList.add(dir > 0 ? "pre-f" : "pre-b");
+  apply(i, dir > 0 ? -1 : info[i].max, false);
+  void B.offsetWidth;
+  B.classList.remove("notr");
+  if (old >= 0 && old !== i) {
+    const A = slides[old];
+    A.classList.remove("cur");
+    A.classList.add(dir > 0 ? "out-f" : "out-b");
+    setTimeout(() => { if (token === my || !A.classList.contains("cur")) { if (cur !== old) snapHide(A); } }, 1150);
+  }
+  cur = i; step = dir > 0 ? 0 : info[i].max;
+  try { dispatchEvent(new CustomEvent("deck:slide", { detail: { i, dir } })); } catch (e) {}
+  const skip = dir > 0 ? magic(old, i) : null;
+  requestAnimationFrame(() => {
+    if (token !== my) return;
+    B.classList.remove("pre-f", "pre-b");
+    B.classList.add("cur");
+    if (dir > 0) apply(i, 0, true, old < 0 ? 200 : ENTER_BASE, skip);
+  });
+  ui();
+}
+function next() {
+  if (cur < 0) return;
+  body.classList.add("started");
+  if (step < info[cur].max) { step++; apply(cur, step, true, 0); ui(); }
+  else if (cur < N - 1) goTo(cur + 1, 1);
+}
+function prev() { if (cur > 0) goTo(cur - 1, -1); }
+function jump(n) { n = Math.max(1, Math.min(N, n)) - 1; if (n !== cur) { body.classList.add("started"); goTo(n, n > cur ? 1 : -1); if (n > cur) {} } }
+function ui() {
+  document.getElementById("hudN").textContent = `${cur + 1} / ${N}`;
+  const tot = info.reduce((a, x) => a + x.max + 1, 0);
+  let done = 0; for (let k = 0; k < cur; k++) done += info[k].max + 1;
+  done += step + 1;
+  document.getElementById("bar").style.width = (100 * done / tot) + "%";
+  try { history.replaceState(null, "", "#" + (cur + 1)); } catch (e) {}
+}
+
+// ───────── input ─────────
+let digits = "", digitT;
+addEventListener("keydown", (e) => {
+  if (e.metaKey || e.ctrlKey || e.altKey) return;
+  const k = e.key;
+  if (["ArrowRight", "ArrowDown", "PageDown", " ", "Spacebar", "Enter", "n", "N"].includes(k)) {
+    e.preventDefault();
+    if (e.repeat) return;
+    if (k === "Enter" && digits) { jump(parseInt(digits, 10)); digits = ""; return; }
+    next();
+  } else if (["ArrowLeft", "ArrowUp", "PageUp", "Backspace", "p", "P"].includes(k)) { e.preventDefault(); if (!e.repeat) prev(); }
+  else if (k === "Home") jump(1);
+  else if (k === "End") jump(N);
+  else if (k === "f" || k === "F") toggleFs();
+  else if (k === "b" || k === "B" || k === ".") document.getElementById("black").classList.toggle("show");
+  else if (/^\d$/.test(k)) { digits += k; clearTimeout(digitT); digitT = setTimeout(() => (digits = ""), 1500); }
+});
+function toggleFs() {
+  const d = document, el = d.documentElement;
+  if (!(d.fullscreenElement || d.webkitFullscreenElement)) (el.requestFullscreen || el.webkitRequestFullscreen || (() => {})).call(el);
+  else (d.exitFullscreen || d.webkitExitFullscreen).call(d);
+}
+document.addEventListener("click", (e) => {
+  if (e.target.closest("#hud, #gpanel, [data-noadv]")) return;
+  if (e.clientX < innerWidth * 0.18 && cur > 0) prev(); else next();
+});
+document.getElementById("bPrev").addEventListener("click", (e) => { e.stopPropagation(); prev(); });
+document.getElementById("bNext").addEventListener("click", (e) => { e.stopPropagation(); next(); });
+document.getElementById("bFs").addEventListener("click", (e) => { e.stopPropagation(); toggleFs(); });
+let tx = null;
+addEventListener("touchstart", (e) => (tx = e.touches[0].clientX), { passive: true });
+addEventListener("touchend", (e) => { if (tx === null) return; const dx = e.changedTouches[0].clientX - tx; tx = null; if (Math.abs(dx) > 50) { e.preventDefault(); dx < 0 ? next() : prev(); } });
+let idleT;
+addEventListener("mousemove", () => {
+  body.classList.remove("idle");
+  document.getElementById("hud").classList.add("show"); document.getElementById("bar").classList.add("show");
+  clearTimeout(idleT);
+  idleT = setTimeout(() => { body.classList.add("idle"); document.getElementById("hud").classList.remove("show"); document.getElementById("bar").classList.remove("show"); }, 2200);
+});
+
+// ───────── boot ─────────
+(async () => {
+  document.querySelectorAll("img[data-a]").forEach((im) => (im.src = window.__A[im.dataset.a]));
+  fit();
+  try { await Promise.all([400, 700, 800].map((w) => document.fonts.load(`${w} 40px BVP`, "Ắệ"))); await document.fonts.ready; } catch (e) {}
+  await Promise.all([...document.images].map((im) => (im.decode ? im.decode().catch(() => {}) : null)));
+  fit();
+  if (PRINT) { body.classList.add("print"); slides.forEach((s, i) => apply(i, 99, false)); body.classList.add("ready"); window.__ready = true; return; }
+  body.classList.add("ready");
+  const h = parseInt(location.hash.slice(1), 10);
+  if (h >= 2 && h <= N) { body.classList.add("started"); goTo(h - 1, -1); }
+  else goTo(0, 1);
+  window.__deck = { next, prev, jump, get cur() { return cur; }, get step() { return step; }, max: (i) => info[i].max, N };
+})();
+})();
+</script><script src="js/qrcode.js"></script><script src="js/sfx.js"></script><script src="js/game.js"></script></body></html>

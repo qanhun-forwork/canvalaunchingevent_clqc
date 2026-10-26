@@ -1,0 +1,242 @@
+<!doctype html>
+<html lang="vi">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,viewport-fit=cover">
+<meta name="theme-color" content="#0B0920">
+<title>Minigame · Bấm chuông</title>
+<link rel="preload" href="/fonts/BVP-ExtraBold.woff2" as="font" type="font/woff2" crossorigin>
+<style>
+@font-face{font-family:"BVP";font-weight:400;font-display:swap;src:url(/fonts/BVP-Regular.woff2) format("woff2")}
+@font-face{font-family:"BVP";font-weight:700;font-display:swap;src:url(/fonts/BVP-Bold.woff2) format("woff2")}
+@font-face{font-family:"BVP";font-weight:800;font-display:swap;src:url(/fonts/BVP-ExtraBold.woff2) format("woff2")}
+:root{--night:#0B0920;--mut:#ABA5DA;--e:cubic-bezier(.16,1,.3,1);--spring:cubic-bezier(.34,1.42,.64,1)}
+*{box-sizing:border-box;margin:0;padding:0;-webkit-tap-highlight-color:transparent}
+html,body{height:100%;background:var(--night);color:#fff;font-family:"BVP",-apple-system,"Helvetica Neue",Arial,sans-serif;-webkit-font-smoothing:antialiased;overscroll-behavior:none}
+body{min-height:100%;overflow:hidden;-webkit-user-select:none;user-select:none;touch-action:manipulation}
+.bg{position:fixed;inset:0;overflow:hidden;pointer-events:none}
+.orb{position:absolute;border-radius:50%}
+.o1{width:120vw;height:120vw;left:-30vw;top:-40vw;background:radial-gradient(closest-side,rgba(125,42,232,.55),rgba(125,42,232,0))}
+.o2{width:110vw;height:110vw;right:-50vw;bottom:-30vw;background:radial-gradient(closest-side,rgba(0,196,204,.38),rgba(0,196,204,0))}
+main{position:relative;height:100%;display:flex;flex-direction:column;padding:calc(18px + env(safe-area-inset-top)) 22px calc(22px + env(safe-area-inset-bottom));max-width:520px;margin:0 auto}
+header{display:flex;align-items:center;justify-content:space-between;gap:12px}
+header img{height:30px;width:auto;display:block}
+.tag{display:inline-flex;align-items:center;gap:8px;padding:7px 16px;border-radius:999px;background:#FFD400;color:#17134A;font-size:14px;font-weight:800;white-space:nowrap}
+[hidden]{display:none !important}
+.view{flex:1;display:flex;flex-direction:column;animation:in .6s var(--e) both}
+@keyframes in{from{opacity:0;transform:translate3d(0,24px,0)}to{opacity:1;transform:none}}
+h1{font-size:40px;line-height:1.08;font-weight:800;letter-spacing:-.03em;margin-top:9vh}
+.sub{font-size:17px;line-height:1.5;color:var(--mut);margin-top:12px}
+form{margin-top:30px;display:flex;flex-direction:column;gap:14px}
+input{font-family:inherit;font-size:20px;line-height:1.2;font-weight:700;color:#fff;background:rgba(255,255,255,.07);border:2px solid rgba(255,255,255,.16);border-radius:18px;padding:18px 20px;outline:none;width:100%;-webkit-user-select:text;user-select:text}
+input::placeholder{color:rgba(255,255,255,.4)}
+input:focus{border-color:#36E0E6;background:rgba(255,255,255,.1)}
+.cta{font-family:inherit;font-size:19px;line-height:1;font-weight:800;color:#fff;border:0;border-radius:18px;padding:20px;background:linear-gradient(135deg,#00C4CC,#5A32FA 60%,#7D2AE8);cursor:pointer;transition:transform .15s ease,opacity .2s}
+.cta:active{transform:scale(.97)}
+.cta:disabled{opacity:.5}
+.err{min-height:22px;color:#FF8A8A;font-size:15px;margin-top:4px}
+.me{display:flex;align-items:center;justify-content:space-between;gap:10px;margin-top:22px}
+.chip{display:flex;align-items:center;gap:10px;min-width:0;padding:8px 16px 8px 8px;border-radius:999px;background:rgba(255,255,255,.08);border:1.5px solid rgba(255,255,255,.13);font-weight:700;font-size:16px}
+.chip i{width:30px;height:30px;flex:none;border-radius:50%;background:linear-gradient(135deg,#00C4CC,#7D2AE8);display:flex;align-items:center;justify-content:center;font-style:normal;font-size:14px;font-weight:800}
+.chip span{white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.qn{font-size:15px;font-weight:700;color:var(--mut);white-space:nowrap}
+.stage{flex:1;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:34px;padding:10px 0}
+.bz{--c1:#FF4D6A;--c2:#E3123A;--sh:#8E0A24;position:relative;width:min(74vw,330px);aspect-ratio:1;height:auto;border:0;border-radius:50%;background:none;padding:0;cursor:pointer;touch-action:none;outline:none}
+@supports not (aspect-ratio:1){.bz{height:min(74vw,330px)}}
+.bz-base{position:absolute;inset:0;border-radius:50%;background:var(--sh);transform:translate3d(0,14px,0);transition:background-color .3s}
+.bz-face{position:absolute;inset:0;border-radius:50%;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:6px;color:#fff;
+  background:radial-gradient(circle at 35% 28%,rgba(255,255,255,.45),rgba(255,255,255,0) 42%),linear-gradient(160deg,var(--c1),var(--c2));
+  box-shadow:inset 0 -10px 24px rgba(0,0,0,.22),inset 0 6px 14px rgba(255,255,255,.25);transition:transform .09s ease}
+.bz-face b{font-size:34px;font-weight:800;letter-spacing:.06em}
+.bz-face svg{width:30%;height:auto}
+.bz-face .num{font-size:110px;line-height:1;font-weight:800;font-variant-numeric:tabular-nums}
+.bz-ring{position:absolute;inset:-6px;border-radius:50%;border:5px solid var(--c1);opacity:0}
+.bz.press .bz-face{transform:translate3d(0,11px,0)}
+.bz[data-s="open"] .bz-ring{animation:ring 1.4s ease-out infinite}
+.bz[data-s="open"] .bz-ring.r2{animation-delay:.7s}
+@keyframes ring{from{opacity:.9;transform:scale(1)}to{opacity:0;transform:scale(1.35)}}
+.bz[data-s="open"] .bz-face{animation:breathe 1.4s ease-in-out infinite}
+@keyframes breathe{0%,100%{transform:none}50%{transform:scale(1.025)}}
+.bz[data-s="open"].press .bz-face{animation:none;transform:translate3d(0,11px,0)}
+.bz[data-s="wait"],.bz[data-s="idle"],.bz[data-s="done"]{--c1:#4A4479;--c2:#2D2858;--sh:#191538}
+.bz[data-s="ready"]{--c1:#FFC300;--c2:#F08A00;--sh:#8A4D00}
+.bz[data-s="me"],.bz[data-s="right"]{--c1:#34E39A;--c2:#12A866;--sh:#0A5E39}
+.bz[data-s="other"]{--c1:#5B5590;--c2:#38326B;--sh:#1D1940}
+.bz[data-s="out"]{--c1:#8A3346;--c2:#5E1A2B;--sh:#2E0A14}
+.bz[data-s="me"] .bz-face{animation:pop .7s var(--spring)}
+@keyframes pop{from{transform:scale(.85)}to{transform:none}}
+.msg{text-align:center;min-height:96px}
+.m1{font-size:26px;line-height:1.25;font-weight:800;letter-spacing:-.01em}
+.m2{font-size:16px;line-height:1.5;color:var(--mut);margin-top:8px}
+.foot{text-align:center;font-size:13px;color:rgba(255,255,255,.35)}
+.foot button{all:unset;cursor:pointer;text-decoration:underline}
+.flash{position:fixed;inset:0;pointer-events:none;background:#34E39A;opacity:0}
+.flash.go{animation:flash .8s ease-out}
+@keyframes flash{from{opacity:.45}to{opacity:0}}
+.off{position:fixed;left:50%;top:calc(12px + env(safe-area-inset-top));transform:translateX(-50%);background:#E83C3C;color:#fff;font-size:13px;font-weight:700;padding:7px 14px;border-radius:999px;opacity:0;transition:opacity .3s}
+.off.show{opacity:1}
+</style>
+</head>
+<body>
+<div class="bg"><div class="orb o1"></div><div class="orb o2"></div></div>
+<div class="flash" id="flash"></div>
+<div class="off" id="off">Mất kết nối, đang thử lại…</div>
+<main>
+  <header><img src="/assets/wordmark.png" alt="Canva"><span class="tag">Minigame</span></header>
+
+  <section class="view" id="vJoin">
+    <h1>Ai nhanh tay hơn?</h1>
+    <p class="sub">Nhập tên của bạn để vào phòng chơi. Khi câu hỏi hiện trên màn hình lớn, bấm chuông thật nhanh để giành quyền trả lời.</p>
+    <form id="fJoin" autocomplete="off">
+      <input id="iName" maxlength="24" placeholder="Tên của bạn" enterkeyhint="go" autocapitalize="words" aria-label="Tên của bạn">
+      <button class="cta" id="bJoin" type="submit">Vào chơi</button>
+      <div class="err" id="err" role="alert"></div>
+    </form>
+  </section>
+
+  <section class="view" id="vGame" hidden>
+    <div class="me"><div class="chip"><i id="av">?</i><span id="myName"></span></div><div class="qn" id="qn"></div></div>
+    <div class="stage">
+      <button class="bz" id="bz" data-s="wait" aria-label="Bấm chuông">
+        <span class="bz-ring"></span><span class="bz-ring r2"></span><span class="bz-base"></span>
+        <span class="bz-face" id="face"></span>
+      </button>
+      <div class="msg" aria-live="polite"><div class="m1" id="m1"></div><div class="m2" id="m2"></div></div>
+    </div>
+    <div class="foot"><button id="bOut" type="button">Đổi tên</button></div>
+  </section>
+</main>
+<script src="/js/sfx.js"></script>
+<script>
+(() => {
+"use strict";
+const API = "/api/game";
+const BELL = '<svg viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M6 8a6 6 0 0 1 12 0c0 7 3 9 3 9H3s3-2 3-9"/><path d="M10.3 21a1.94 1.94 0 0 0 3.4 0"/><path d="M4 2C2.8 3.7 2 5.7 2 8"/><path d="M22 8c0-2.3-.8-4.3-2-6"/></svg>';
+const $ = (id) => document.getElementById(id);
+let me = null, st = null, offset = 0, bestRtt = 1e9, pollT = 0, inflight = false, fails = 0, sending = false, lastRes = null, openTimer = 0, mode = "";
+try { me = JSON.parse(localStorage.getItem("cgMe") || "null"); } catch (e) {}
+const save = () => { try { localStorage.setItem("cgMe", JSON.stringify(me)); } catch (e) {} };
+const snow = () => Date.now() + offset;
+function sync(n, t0, t1) { const rtt = t1 - t0; bestRtt = Math.min(bestRtt * 1.05 + 5, bestRtt + 50); if (rtt <= bestRtt) { bestRtt = rtt; offset = n - (t0 + t1) / 2; } }
+
+function show(v) { $("vJoin").hidden = v !== "join"; $("vGame").hidden = v !== "game"; }
+function toJoin(msg) {
+  show("join"); $("err").textContent = msg || "";
+  if (me && me.name) $("iName").value = me.name;
+}
+function toGame() {
+  show("game");
+  $("myName").textContent = me.name;
+  $("av").textContent = (me.name.trim()[0] || "?").toUpperCase();
+  render();
+}
+
+$("fJoin").addEventListener("submit", async (e) => {
+  e.preventDefault();
+  SFX.unlock();
+  const name = $("iName").value.replace(/\s+/g, " ").trim();
+  if (!name) { $("err").textContent = "Bạn nhập tên trước nhé."; return; }
+  $("bJoin").disabled = true; $("err").textContent = "";
+  try {
+    const r = await fetch(API, { method: "POST", headers: { "Content-Type": "application/json" }, body: JSON.stringify({ op: "join", name }) });
+    const j = await r.json();
+    if (!j.pid) throw new Error(j.err || "join");
+    me = { pid: j.pid, name: j.name, epoch: j.epoch }; save(); lastRes = null;
+    toGame(); poll();
+  } catch (err) { $("err").textContent = "Không vào được phòng, thử lại nhé."; }
+  $("bJoin").disabled = false;
+});
+$("bOut").addEventListener("click", () => { const n = me && me.name; me = null; save(); toJoin(); $("iName").value = n || ""; });
+
+async function poll() {
+  if (inflight) return;
+  inflight = true;
+  const t0 = Date.now();
+  try {
+    const r = await fetch(`${API}?r=player${st && st.key ? "&k=" + encodeURIComponent(st.key) : ""}`, { cache: "no-store" });
+    const s = await r.json();
+    if (s && s.g) { sync(s.now, t0, Date.now()); if (!st || s.now >= st.now) st = s; fails = 0; }
+  } catch (e) { fails++; }
+  inflight = false;
+  $("off").classList.toggle("show", fails > 2);
+  if (me && st && st.g.epoch !== me.epoch && st.g.v > 0) { const n = me.name; me = null; save(); toJoin("Trò chơi đã được làm mới, bạn vào lại nhé."); $("iName").value = n; return; }
+  if (me) render();
+}
+function schedule() {
+  clearTimeout(pollT);
+  if (document.hidden) return;
+  const fast = st && st.g.phase === "q";
+  pollT = setTimeout(async () => { await poll(); schedule(); }, fast ? 800 : 1600);
+}
+document.addEventListener("visibilitychange", () => { if (!document.hidden) { poll(); schedule(); } });
+
+function view() {
+  if (!st) return { s: "wait", m1: "Đang kết nối…", m2: "" };
+  const g = st.g;
+  if (g.phase === "idle" || g.phase === "lobby") return { s: "idle", m1: "Đã vào phòng!", m2: "Nhìn lên màn hình lớn, câu hỏi sắp xuất hiện." };
+  if (g.phase === "end") return { s: "done", m1: "Cảm ơn bạn đã chơi!", m2: "Xem bảng vinh danh trên màn hình lớn nhé." };
+  const qn = `Câu ${g.q + 1}/${g.n || 3}`;
+  if (g.solved) {
+    if (g.last && !g.last.reveal && g.last.pid === me.pid) return { s: "right", qn, m1: "Chính xác! 🎉", m2: "Bạn đã trả lời đúng câu này." };
+    if (g.last && g.last.reveal) return { s: "done", qn, m1: "Đã công bố đáp án", m2: "Chờ câu hỏi tiếp theo nhé." };
+    return { s: "done", qn, m1: `${(g.last && g.last.name) || "Một người chơi"} đã trả lời đúng`, m2: "Chờ câu hỏi tiếp theo nhé." };
+  }
+  if (st.buzz) {
+    if (st.buzz.pid === me.pid) return { s: "me", qn, m1: "Bạn giành quyền trả lời!", m2: "Hãy trả lời qua micro nhé." };
+    return { s: "other", qn, m1: `${st.buzz.name} nhanh hơn`, m2: "Nếu trả lời sai, chuông sẽ mở lại." };
+  }
+  if (g.out.includes(me.pid)) return { s: "out", qn, m1: "Bạn đã trả lời sai câu này", m2: "Hẹn bạn ở câu tiếp theo." };
+  if (lastRes && lastRes.key === st.key && lastRes.why === "late") return { s: "other", qn, m1: `${lastRes.by || "Người khác"} nhanh hơn`, m2: "Nếu trả lời sai, chuông sẽ mở lại." };
+  const now = snow();
+  if (now < g.openAt) return { s: "ready", qn, left: Math.ceil((g.openAt - now) / 1000), m1: "Chuẩn bị…", m2: "Đọc câu hỏi trên màn hình lớn." };
+  return { s: "open", qn, m1: "BẤM CHUÔNG!", m2: "Biết đáp án thì bấm thật nhanh." };
+}
+let faceKey = "";
+function render() {
+  if (!me || $("vGame").hidden) return;
+  const v = view(), bz = $("bz");
+  if (v.s !== mode) {
+    if (v.s === "me") { SFX.win(); try { navigator.vibrate && navigator.vibrate([60, 40, 120]); } catch (e) {} $("flash").classList.remove("go"); void $("flash").offsetWidth; $("flash").classList.add("go"); }
+    if (v.s === "open" && mode === "ready") { try { navigator.vibrate && navigator.vibrate(40); } catch (e) {} }
+    mode = v.s;
+  }
+  bz.dataset.s = v.s;
+  bz.disabled = false;
+  const fk = v.s === "ready" ? "n" + v.left : v.s === "open" ? "open" : "bell";
+  if (fk !== faceKey) { faceKey = fk; $("face").innerHTML = v.s === "ready" ? `<span class="num">${v.left}</span>` : v.s === "open" ? `${BELL}<b>BẤM</b>` : BELL; }
+  $("m1").textContent = v.m1; $("m2").textContent = v.m2; $("qn").textContent = v.qn || "";
+  // flip to "open" exactly at openAt
+  clearTimeout(openTimer);
+  if (v.s === "ready") openTimer = setTimeout(render, Math.max(30, Math.min(1000, (st.g.openAt - snow()) % 1000 || 1000)));
+}
+
+async function buzz(e) {
+  if (e) e.preventDefault();
+  SFX.unlock();
+  if (!me || sending) return;
+  const v = view();
+  if (v.s !== "open") return;
+  sending = true;
+  const bz = $("bz"); bz.classList.add("press");
+  SFX.tap(); try { navigator.vibrate && navigator.vibrate(30); } catch (err) {}
+  $("m1").textContent = "Đã bấm!"; $("m2").textContent = "Đang chờ kết quả…";
+  try {
+    const r = await fetch(API, { method: "POST", headers: { "Content-Type": "application/json" }, body: JSON.stringify({ op: "buzz", pid: me.pid, epoch: me.epoch }) });
+    const j = await r.json();
+    if (j.why === "rejoin") { const n = me.name; me = null; save(); toJoin("Phiên chơi đã thay đổi, bạn vào lại nhé."); $("iName").value = n; }
+    else { lastRes = { key: st && st.key, why: j.won ? "won" : j.why, by: j.by }; }
+  } catch (err) { $("m2").textContent = "Mạng chậm, thử bấm lại nhé."; }
+  setTimeout(() => bz.classList.remove("press"), 120);
+  sending = false;
+  await poll();
+}
+$("bz").addEventListener("pointerdown", buzz);
+$("bz").addEventListener("keydown", (e) => { if (e.key === " " || e.key === "Enter") buzz(e); });
+$("bz").addEventListener("contextmenu", (e) => e.preventDefault());
+
+if (me && me.pid) { toGame(); } else toJoin();
+poll().then(schedule);
+})();
+</script>
+</body>
+</html>

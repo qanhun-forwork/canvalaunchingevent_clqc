@@ -1,0 +1,8 @@
+{
+  "name": "canva-keynote-minigame",
+  "private": true,
+  "version": "1.0.0",
+  "description": "Keynote Canva tại Việt Nam + minigame bấm chuông",
+  "engines": { "node": ">=18" },
+  "scripts": { "dev": "node dev-server.js" }
+}
