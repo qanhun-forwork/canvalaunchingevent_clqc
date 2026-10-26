@@ -1,5 +1,8 @@
 // Câu hỏi minigame. Sửa trực tiếp file này trên GitHub, Vercel sẽ tự cập nhật.
 // answer: chữ cái của đáp án đúng (A, B, C hoặc D).
+// Số người chơi tối đa (mã QR sẽ khoá khi đủ người).
+window.GAME_CONFIG = { maxPlayers: 50 };
+
 window.QUESTIONS = [
   {
     q: "Sự kiện ra mắt chính thức Canva tại Việt Nam ngày 24/04/2026 có tên là gì?",

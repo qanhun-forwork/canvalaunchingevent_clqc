@@ -75,6 +75,9 @@ input:focus{border-color:#36E0E6;background:rgba(255,255,255,.1)}
 @keyframes flash{from{opacity:.45}to{opacity:0}}
 .off{position:fixed;left:50%;top:calc(12px + env(safe-area-inset-top));transform:translateX(-50%);background:#E83C3C;color:#fff;font-size:13px;font-weight:700;padding:7px 14px;border-radius:999px;opacity:0;transition:opacity .3s}
 .off.show{opacity:1}
+.fullbox{margin-top:30px;padding:26px 22px;border-radius:22px;background:rgba(255,212,0,.08);border:1.5px solid rgba(255,212,0,.35);animation:in .6s var(--e) both}
+.fb-ic{width:60px;height:60px;border-radius:50%;background:rgba(255,212,0,.14);display:flex;align-items:center;justify-content:center}
+.fb-t{font-size:24px;line-height:1.25;font-weight:800;margin-top:16px;color:#FFD400}
 </style>
 </head>
 <body>
@@ -92,6 +95,11 @@ input:focus{border-color:#36E0E6;background:rgba(255,255,255,.1)}
       <button class="cta" id="bJoin" type="submit">Vào chơi</button>
       <div class="err" id="err" role="alert"></div>
     </form>
+    <div class="fullbox" id="full" hidden>
+      <div class="fb-ic"><svg width="34" height="34" viewBox="0 0 24 24" fill="none" stroke="#FFD400" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M22 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg></div>
+      <div class="fb-t">Phòng đã đủ <span id="capN">50</span> người chơi</div>
+      <p class="sub">Rất tiếc, minigame chỉ nhận tối đa <span id="capN2">50</span> người. Bạn vẫn có thể theo dõi và đoán đáp án cùng mọi người trên màn hình lớn nhé!</p>
+    </div>
   </section>
 
   <section class="view" id="vGame" hidden>
@@ -114,15 +122,37 @@ const API = "/api/game";
 const BELL = '<svg viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M6 8a6 6 0 0 1 12 0c0 7 3 9 3 9H3s3-2 3-9"/><path d="M10.3 21a1.94 1.94 0 0 0 3.4 0"/><path d="M4 2C2.8 3.7 2 5.7 2 8"/><path d="M22 8c0-2.3-.8-4.3-2-6"/></svg>';
 const $ = (id) => document.getElementById(id);
 let me = null, st = null, offset = 0, bestRtt = 1e9, pollT = 0, inflight = false, fails = 0, sending = false, lastRes = null, openTimer = 0, mode = "";
-try { me = JSON.parse(localStorage.getItem("cgMe") || "null"); } catch (e) {}
-const save = () => { try { localStorage.setItem("cgMe", JSON.stringify(me)); } catch (e) {} };
+// identity: one id per phone, kept in localStorage (cookie as backup for in-app browsers)
+function load() {
+  let v = null;
+  try { v = JSON.parse(localStorage.getItem("cgDev") || "null"); } catch (e) {}
+  if (!v) { const m = document.cookie.match(/(?:^|; )cgDev=([^;]*)/); if (m) try { v = JSON.parse(decodeURIComponent(m[1])); } catch (e) {} }
+  if (!v || !/^[a-z0-9]{8,32}$/.test(v.pid || "")) v = { pid: Math.random().toString(36).slice(2, 10) + Date.now().toString(36), name: "", joined: false };
+  return v;
+}
+const dev = load();
+const save = () => {
+  const j = JSON.stringify(dev);
+  try { localStorage.setItem("cgDev", j); } catch (e) {}
+  try { document.cookie = "cgDev=" + encodeURIComponent(j) + "; max-age=86400; path=/; SameSite=Lax"; } catch (e) {}
+};
+save();
+if (dev.joined) me = dev;
+let pollN = 0, noRedis = false, full = false;
 const snow = () => Date.now() + offset;
 function sync(n, t0, t1) { const rtt = t1 - t0; bestRtt = Math.min(bestRtt * 1.05 + 5, bestRtt + 50); if (rtt <= bestRtt) { bestRtt = rtt; offset = n - (t0 + t1) / 2; } }
 
 function show(v) { $("vJoin").hidden = v !== "join"; $("vGame").hidden = v !== "game"; }
 function toJoin(msg) {
   show("join"); $("err").textContent = msg || "";
-  if (me && me.name) $("iName").value = me.name;
+  if (dev.name) $("iName").value = dev.name;
+  renderFull();
+}
+function renderFull() {
+  const cap = (st && st.g.cap) || 50;
+  const isFull = !dev.joined && (full || (st && typeof st.count === "number" && st.count >= cap));
+  $("capN").textContent = $("capN2").textContent = cap;
+  $("full").hidden = !isFull; $("fJoin").hidden = isFull;
 }
 function toGame() {
   show("game");
@@ -138,35 +168,41 @@ $("fJoin").addEventListener("submit", async (e) => {
   if (!name) { $("err").textContent = "Bạn nhập tên trước nhé."; return; }
   $("bJoin").disabled = true; $("err").textContent = "";
   try {
-    const r = await fetch(API, { method: "POST", headers: { "Content-Type": "application/json" }, body: JSON.stringify({ op: "join", name }) });
+    const r = await fetch(API, { method: "POST", headers: { "Content-Type": "application/json" }, body: JSON.stringify({ op: "join", name, pid: dev.pid }) });
+    if (r.status === 503) throw new Error("no-redis");
     const j = await r.json();
+    if (j.err === "full") { full = true; if (st) st.g.cap = j.cap; renderFull(); $("bJoin").disabled = false; return; }
     if (!j.pid) throw new Error(j.err || "join");
-    me = { pid: j.pid, name: j.name, epoch: j.epoch }; save(); lastRes = null;
+    dev.pid = j.pid; dev.name = j.name; dev.joined = true; save(); me = dev; lastRes = null;
     toGame(); poll();
-  } catch (err) { $("err").textContent = "Không vào được phòng, thử lại nhé."; }
+  } catch (err) { $("err").textContent = err.message === "no-redis" ? "Máy chủ chưa sẵn sàng, báo người dẫn chương trình nhé." : "Không vào được phòng, thử lại nhé."; }
   $("bJoin").disabled = false;
 });
-$("bOut").addEventListener("click", () => { const n = me && me.name; me = null; save(); toJoin(); $("iName").value = n || ""; });
+$("bOut").addEventListener("click", () => { me = null; toJoin(); }); // keeps the same id, so renaming never adds a player
 
 async function poll() {
   if (inflight) return;
   inflight = true;
   const t0 = Date.now();
   try {
-    const r = await fetch(`${API}?r=player${st && st.key ? "&k=" + encodeURIComponent(st.key) : ""}`, { cache: "no-store" });
+    const check = dev.joined && pollN++ % 3 === 0; // ask "am I still in the game?" every few polls
+    const r = await fetch(`${API}?r=player${st && st.key ? "&k=" + encodeURIComponent(st.key) : ""}${check ? "&pid=" + dev.pid : ""}${!dev.joined ? "&c=1" : ""}`, { cache: "no-store" });
+    noRedis = r.status === 503;
     const s = await r.json();
-    if (s && s.g) { sync(s.now, t0, Date.now()); if (!st || s.now >= st.now) st = s; fails = 0; }
+    if (s && s.g) { sync(s.now, t0, Date.now()); if (!st || s.now >= st.now) st = s; fails = 0; } else fails++;
+    // only leave the game when the server says this phone is no longer on the player list (operator pressed Reset)
+    if (s && s.me === false && dev.joined) { dev.joined = false; save(); me = null; full = false; toJoin("Trò chơi đã được làm mới, bạn nhập tên để vào lại nhé."); }
   } catch (e) { fails++; }
   inflight = false;
-  $("off").classList.toggle("show", fails > 2);
-  if (me && st && st.g.epoch !== me.epoch && st.g.v > 0) { const n = me.name; me = null; save(); toJoin("Trò chơi đã được làm mới, bạn vào lại nhé."); $("iName").value = n; return; }
-  if (me) render();
+  $("off").textContent = noRedis ? "Máy chủ chưa kết nối cơ sở dữ liệu" : "Mất kết nối, đang thử lại…";
+  $("off").classList.toggle("show", fails > 2 || noRedis);
+  if (me) render(); else if (!$("vJoin").hidden) renderFull();
 }
 function schedule() {
   clearTimeout(pollT);
   if (document.hidden) return;
   const fast = st && st.g.phase === "q";
-  pollT = setTimeout(async () => { await poll(); schedule(); }, fast ? 800 : 1600);
+  pollT = setTimeout(async () => { await poll(); schedule(); }, fast ? 800 : st && st.g.phase === "end" ? 5000 : 1600);
 }
 document.addEventListener("visibilitychange", () => { if (!document.hidden) { poll(); schedule(); } });
 
@@ -221,9 +257,9 @@ async function buzz(e) {
   SFX.tap(); try { navigator.vibrate && navigator.vibrate(30); } catch (err) {}
   $("m1").textContent = "Đã bấm!"; $("m2").textContent = "Đang chờ kết quả…";
   try {
-    const r = await fetch(API, { method: "POST", headers: { "Content-Type": "application/json" }, body: JSON.stringify({ op: "buzz", pid: me.pid, epoch: me.epoch }) });
+    const r = await fetch(API, { method: "POST", headers: { "Content-Type": "application/json" }, body: JSON.stringify({ op: "buzz", pid: me.pid }) });
     const j = await r.json();
-    if (j.why === "rejoin") { const n = me.name; me = null; save(); toJoin("Phiên chơi đã thay đổi, bạn vào lại nhé."); $("iName").value = n; }
+    if (j.why === "rejoin") { dev.joined = false; save(); me = null; toJoin("Trò chơi đã được làm mới, bạn nhập tên để vào lại nhé."); }
     else { lastRes = { key: st && st.key, why: j.won ? "won" : j.why, by: j.by }; }
   } catch (err) { $("m2").textContent = "Mạng chậm, thử bấm lại nhé."; }
   setTimeout(() => bz.classList.remove("press"), 120);

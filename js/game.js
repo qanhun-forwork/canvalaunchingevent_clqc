@@ -2,6 +2,8 @@
 (() => {
 "use strict";
 const Q = window.QUESTIONS || [];
+const CAP = (window.GAME_CONFIG && +window.GAME_CONFIG.maxPlayers) || 50;
+let noRedis = false;
 const SFX = window.SFX;
 const body = document.body;
 const slides = [...document.querySelectorAll("#stage .slide")];
@@ -33,6 +35,7 @@ async function post(op, extra = {}) {
   try {
     const r = await fetch(API, { method: "POST", headers: { "Content-Type": "application/json" }, body: JSON.stringify({ op, key: KEY, ...extra }) });
     if (r.status === 401) { auth = false; conn(); return null; }
+    noRedis = r.status === 503;
     const s = await r.json();
     if (s && s.g) { fails = 0; sync(s.now, t0, Date.now()); ingest(s, true); }
     return s;
@@ -45,6 +48,7 @@ async function poll() {
   try {
     const u = `${API}?r=host${st && st.key ? "&k=" + encodeURIComponent(st.key) : ""}${KEY ? "&key=" + encodeURIComponent(KEY) : ""}`;
     const r = await fetch(u, { cache: "no-store" });
+    noRedis = r.status === 503;
     const s = await r.json();
     if (s && s.g) { fails = 0; auth = s.auth !== false; sync(s.now, t0, Date.now()); ingest(s); }
     else fails++;
@@ -74,6 +78,7 @@ function conn() {
   let cls = "ok", txt = "";
   const n = st && st.players ? st.players.length : 0;
   if (!ONLINE) { cls = "bad"; txt = "Ngoại tuyến: mở bằng link Vercel để chơi"; }
+  else if (noRedis) { cls = "bad"; txt = "Chưa kết nối Upstash Redis (xem bước 3 README)"; }
   else if (fails > 2) { cls = "bad"; txt = "Mất kết nối máy chủ"; }
   else if (!auth) { cls = "warn"; txt = "Thiếu mã điều khiển (?key=…)"; }
   else if (!st) { cls = ""; txt = "Đang kết nối…"; }
@@ -91,7 +96,7 @@ function onSlide(i) {
   if (!type) { active = null; body.classList.remove("g-on"); return; }
   active = { s, type, qi: +(s.dataset.qi || 0), mode: null, key: null };
   body.classList.add("g-on");
-  if (type === "join") { renderQR(); renderJoin(null, true); if (auth) post("lobby"); }
+  if (type === "join") { renderQR(); renderJoin(null, true); if (auth) post("lobby", { cap: CAP }); }
   if (type === "q") {
     s.classList.remove("g-judge");
     $(".g-stamp").classList.remove("show");
@@ -124,6 +129,13 @@ let joinSoundAt = 0;
 function renderJoin(prev, snap) {
   const pl = (st && st.players) || [];
   const nEl = $(".g-n"), chips = $(".g-chips");
+  const cap = (st && st.g.cap) || CAP, isFull = pl.length >= cap;
+  $(".g-bar i").style.transform = `scaleX(${Math.min(1, pl.length / cap)})`;
+  $(".g-rem").textContent = Math.max(0, cap - pl.length);
+  $(".g-count").classList.toggle("full", isFull);
+  $(".g-qrcard").classList.toggle("is-full", isFull);
+  if (noRedis) { const box = $(".g-qr"); box.dataset.url = ""; box.innerHTML = '<div class="off">Chưa kết nối cơ sở dữ liệu<br>Upstash Redis.<br>Xem bước 3 trong README.</div>'; }
+  else if (!$(".g-qr").dataset.url) renderQR();
   const old = +nEl.textContent;
   if (old !== pl.length) {
     nEl.textContent = pl.length;

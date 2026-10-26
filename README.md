@@ -8,7 +8,7 @@
 1. **Tạo repo GitHub**: vào github.com → New repository → đặt tên (ví dụ `canva-keynote`) → Create.
    Bấm "uploading an existing file", kéo toàn bộ **nội dung** thư mục này vào (thư mục `api`, `assets`, `fonts`, `js` và các file `index.html`, `play.html`, `questions.js`, `vercel.json`, `package.json`...) → Commit.
 2. **Import vào Vercel**: vercel.com → Add New → Project → chọn repo vừa tạo → Framework Preset: **Other** → Deploy.
-3. **Thêm cơ sở dữ liệu cho chuông** (bắt buộc):
+3. **Thêm cơ sở dữ liệu cho chuông** (bắt buộc, thiếu bước này game sẽ báo “Chưa kết nối Upstash Redis” và không cho vào phòng):
    Trong project Vercel → tab **Storage** → Create Database → chọn **Upstash for Redis** (Marketplace) → gói **Free** → Connect với project này.
    Vercel tự thêm biến `KV_REST_API_URL` và `KV_REST_API_TOKEN`.
 4. **Đặt mã điều khiển** (nên làm, để khán giả không điều khiển được game):
@@ -33,6 +33,18 @@ Mở bài thuyết trình bằng: `https://<tên-project>.vercel.app/?key=canva2
 Âm thanh phát từ máy chiếu (nhớ cắm loa). Âm thanh được tạo bằng code (WebAudio), không dùng file nhạc có bản quyền.
 Trên slide câu hỏi, phím B dùng để chấm đáp án B (không làm đen màn hình).
 
+## Kiểm tra trước buổi diễn
+
+Mở slide Minigame, di chuột: bảng điều khiển góc phải dưới phải ghi **“Đã kết nối · N người chơi”** (chấm xanh).
+Nếu ghi “Chưa kết nối Upstash Redis” thì làm lại bước 3 rồi Redeploy.
+
+## Giới hạn người chơi
+
+Mặc định tối đa **50 người**. Đổi trong `questions.js`: `window.GAME_CONFIG = { maxPlayers: 50 };`
+Khi đủ người, mã QR trên màn hình bị che bằng thông báo “Đã đủ 50 người chơi”, ai quét sau sẽ thấy “Phòng đã đủ người”.
+Mỗi điện thoại chỉ tính là 1 người: tải lại trang, khoá màn hình hay đổi tên đều không làm tăng số người.
+Lưu ý: cùng một người nhưng mở bằng 2 trình duyệt khác nhau (ví dụ Zalo và Safari) sẽ bị tính là 2 người.
+
 ## Sửa câu hỏi
 
 Sửa file `questions.js` ngay trên GitHub (biểu tượng bút chì) → Commit → Vercel tự cập nhật sau khoảng 30 giây.
@@ -40,7 +52,8 @@ Giữ đúng 3 câu, mỗi câu 4 đáp án; `answer` là chữ cái đáp án �
 
 ## Giới hạn gói miễn phí
 
-Upstash Free: 500.000 lệnh/tháng. Một buổi khoảng 50 người chơi trong 15 phút dùng chừng 100.000 đến 150.000 lệnh, đủ cho buổi diễn và vài lần tập.
+Upstash Free: 500.000 lệnh/tháng, tối đa 10.000 lệnh/giây. Lúc cao điểm 50 người chơi dùng khoảng 150 lệnh/giây; cả buổi khoảng 20 phút tốn chừng 150.000 lệnh. Gói miễn phí đủ cho buổi diễn và vài lần tập với ít người.
+Đừng để điện thoại người chơi mở trang `/play` nhiều ngày liền vì vẫn tốn lệnh (khi khoá màn hình thì trang tự ngừng gửi yêu cầu).
 
 ## Chạy thử trên máy
 
