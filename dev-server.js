@@ -1,7 +1,7 @@
 // Local test server: node dev-server.js  ->  http://localhost:3000  (in-memory game state)
 const http = require("http"), fs = require("fs"), path = require("path");
 const api = require("./api/game.js");
-const T = { ".html": "text/html; charset=utf-8", ".js": "text/javascript; charset=utf-8", ".css": "text/css", ".png": "image/png", ".woff2": "font/woff2", ".svg": "image/svg+xml" };
+const T = { ".html": "text/html; charset=utf-8", ".js": "text/javascript; charset=utf-8", ".css": "text/css", ".png": "image/png", ".woff2": "font/woff2", ".svg": "image/svg+xml", ".mp4": "video/mp4" };
 http.createServer((req, res) => {
   const u = new URL(req.url, "http://x");
   if (u.pathname === "/api/game") return api(req, res);

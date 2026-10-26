@@ -85,6 +85,9 @@ img{display:block;-webkit-user-drag:none}
 .tk-t{font-size:32px;line-height:1.3;font-weight:800;margin:2px 0}
 .hint{position:absolute;left:0;right:0;bottom:46px;text-align:center;font-size:20px;color:rgba(255,255,255,.55);transition:opacity .6s ease}
 body.started .hint{opacity:0}
+.vid .vframe{position:absolute;left:160px;top:90px;width:1600px;height:900px;border-radius:24px;overflow:hidden;background:#000;box-shadow:0 30px 90px rgba(0,0,0,.5)}
+.vid iframe,.vid video{display:block;width:100%;height:100%;border:0;background:#000}
+.vid .hint{bottom:24px}
 .ag-n{font-size:250px;line-height:.95;font-weight:800;letter-spacing:-.05em}
 .agenda-col{border-top:1.5px solid var(--line);padding-top:40px}
 .div-n{position:absolute;font-size:440px;line-height:1;font-weight:800;letter-spacing:-.05em;color:transparent;-webkit-text-stroke:3px rgba(255,255,255,.55)}
@@ -301,20 +304,22 @@ body.g-on #gpanel{display:flex}
 .gp-hint:empty{display:none}
 body.print #gpanel{display:none}
 </style></head>
-<body><div id="stage"><section class="slide cover"  ><div class="bg"><div class="orb" style="left:500px;top:-490px;width:1500px;height:1500px;background:radial-gradient(closest-side, rgba(125,42,232,0.75) 0%, rgba(125,42,232,0.33) 45%, rgba(125,42,232,0) 100%);--od:22s"></div><div class="orb" style="left:1200px;top:430px;width:1100px;height:1100px;background:radial-gradient(closest-side, rgba(0,196,204,0.5625) 0%, rgba(0,196,204,0.24750000000000003) 45%, rgba(0,196,204,0) 100%);--od:26s"></div><div class="orb" style="left:-380px;top:480px;width:1200px;height:1200px;background:radial-gradient(closest-side, rgba(90,50,250,0.625) 0%, rgba(90,50,250,0.275) 45%, rgba(90,50,250,0) 100%);--od:30s"></div></div>
+<body><div id="stage"><section class="slide vid"><div class="vframe" data-noadv><iframe src="https://www.youtube.com/embed/xCNAYZNHWis?enablejsapi=1&rel=0&playsinline=1" title="Canva Annual Report" allow="autoplay; encrypted-media; fullscreen; picture-in-picture" allowfullscreen referrerpolicy="strict-origin-when-cross-origin"></iframe></div>
+  <div class="hint">Bấm chuột hoặc nhấn phím mũi tên để bắt đầu. Nhấn F để xem toàn màn hình.</div>
+</section>
+<section class="slide cover"  ><div class="bg"><div class="orb" style="left:500px;top:-490px;width:1500px;height:1500px;background:radial-gradient(closest-side, rgba(125,42,232,0.75) 0%, rgba(125,42,232,0.33) 45%, rgba(125,42,232,0) 100%);--od:22s"></div><div class="orb" style="left:1200px;top:430px;width:1100px;height:1100px;background:radial-gradient(closest-side, rgba(0,196,204,0.5625) 0%, rgba(0,196,204,0.24750000000000003) 45%, rgba(0,196,204,0) 100%);--od:26s"></div><div class="orb" style="left:-380px;top:480px;width:1200px;height:1200px;background:radial-gradient(closest-side, rgba(90,50,250,0.625) 0%, rgba(90,50,250,0.275) 45%, rgba(90,50,250,0) 100%);--od:30s"></div></div>
   <img data-b="1" class="fx fx-sweep " data-a="ribbon" alt=""  style="position:absolute;left:600px;top:-90px;width:1400px">
   <div class="flt" style="position:absolute;left:660px;top:10px;width:250px;--fd:5.0s;--fdl:-2.0s"><img data-b="1" class="fx fx-pop " data-a="racket" alt=""  style="width:100%"></div><div class="flt" style="position:absolute;left:935px;top:80px;width:180px;--fd:5.5s;--fdl:-1.5s"><img data-b="1" class="fx fx-pop " data-a="gamepad" alt=""  style="width:100%"></div><div class="flt" style="position:absolute;left:1140px;top:110px;width:150px;--fd:5.0s;--fdl:0.0s"><img data-b="1" class="fx fx-pop " data-a="aa" alt=""  style="width:100%"></div>
   <div class="flt" style="position:absolute;left:1325px;top:50px;width:238px;--fd:5.5s;--fdl:-2.5s"><img data-b="1" class="fx fx-pop " data-a="clapper" alt=""  style="width:100%"></div><div class="flt" style="position:absolute;left:1565px;top:210px;width:144px;--fd:5.5s;--fdl:-2.5s"><img data-b="1" class="fx fx-pop " data-a="aperture" alt=""  style="width:100%"></div><div class="flt" style="position:absolute;left:1660px;top:400px;width:108px;--fd:6.0s;--fdl:-1.0s"><img data-b="1" class="fx fx-pop " data-a="star" alt=""  style="width:100%"></div>
   <div class="flt" style="position:absolute;left:1205px;top:440px;width:137px;--fd:5.5s;--fdl:-4.5s"><img data-b="1" class="fx fx-pop " data-a="plane" alt=""  style="width:100%"></div><div class="flt" style="position:absolute;left:1305px;top:440px;width:317px;--fd:6.5s;--fdl:-4.5s"><img data-b="1" class="fx fx-pop " data-a="vr" alt=""  style="width:100%"></div><div class="flt" style="position:absolute;left:1350px;top:628px;width:310px;--fd:7.4s;--fdl:-2.8s"><img data-b="1" class="fx fx-pop " data-a="csphere" alt=""  style="width:100%"></div><div class="flt" style="position:absolute;left:1675px;top:888px;width:230px;--fd:6.9s;--fdl:-1.3s"><img data-b="1" class="fx fx-pop " data-a="coinblur" alt=""  style="width:100%"></div>
   <img data-b="1" class="fx fx-rise " data-a="wordmark" alt=""  style="position:absolute;left:140px;top:96px;width:240px">
-  <div data-b="1" class="fx fx-mask cover-t" style="position:absolute;left:140px;top:290px;width:1200px"><span class="w"><i>Chiến</i></span> <span class="w"><i>lược</i></span> <span class="w"><i>quảng</i></span> <span class="w"><i>cáo</i></span><br><span class="w"><i>của</i></span> <span class="w"><i>Canva</i></span> <span class="w"><i>tại</i></span> <span class="w"><i>Việt</i></span> <span class="w"><i>Nam</i></span></div>
+  <div data-b="1" class="fx fx-mask cover-t" style="position:absolute;left:140px;top:290px;width:1200px"><span class="w"><i>Canva</i></span> <span class="w"><i>Annual</i></span> <span class="w"><i>Report</i></span> <span class="w"><i>-</i></span><br><span class="w"><i>Launching</i></span> <span class="w"><i>Event</i></span> <span class="w"><i>2026</i></span></div>
   <div data-b="1" class="fx fx-rise cover-s" style="position:absolute;left:140px;top:530px;width:1100px" >Từ đầu năm 2026 đến nay: phân tích chiến lược quảng cáo</div>
   <div data-b="2" class="fx fx-rise glass ticket" style="position:absolute;left:140px;top:780px;width:820px;height:150px" ><div class="dot" style="width:84px;height:84px;background:#7D2AE8"><svg class="ic" stroke="currentColor" fill="none" stroke-width="2" viewBox="0 0 24 24" stroke-linecap="round" stroke-linejoin="round" color="#fff" style="color:#fff" height="42" width="42" xmlns="http://www.w3.org/2000/svg"><path d="M2 9a3 3 0 0 1 0 6v2a2 2 0 0 0 2 2h16a2 2 0 0 0 2-2v-2a3 3 0 0 1 0-6V7a2 2 0 0 0-2-2H4a2 2 0 0 0-2 2Z"></path><path d="M13 5v2"></path><path d="M13 17v2"></path><path d="M13 11v2"></path></svg></div>
      <div><div class="k">Mô phỏng sự kiện ra mắt Canva Vietnam</div><div class="tk-t">“Phường A.I Đồ”, 24.04.2026</div><div class="k">Thủ Thiêm Riverstage, TP.HCM</div></div></div>
   <div data-b="2" class="fx selp selbox" style="position:absolute;left:128px;top:768px;width:844px;height:174px"></div><div data-b="2" class="fx selp handle" style="left:119px;top:759px"></div><div data-b="2" class="fx selp handle" style="left:963px;top:759px"></div><div data-b="2" class="fx selp handle" style="left:119px;top:933px"></div><div data-b="2" class="fx selp handle" style="left:963px;top:933px"></div>
   <svg data-b="2" class="fx selp cursor" style="left:938px;top:922px" width="38" height="38" viewBox="0 0 24 24"><path d="M4 2 L20 11 L12.5 13 L9 21 Z" fill="#7D2AE8" stroke="#fff" stroke-width="1.6" stroke-linejoin="round"/></svg>
   <div data-b="2" class="fx selp ctag" style="left:968px;top:952px">Business proposal</div>
-  <div class="hint">Bấm chuột hoặc nhấn phím mũi tên để bắt đầu. Nhấn F để xem toàn màn hình.</div>
 </section>
 <section class="slide "  ><div class="bg"><div class="orb" style="left:950px;top:-420px;width:1200px;height:1200px;background:radial-gradient(closest-side, rgba(125,42,232,0.5) 0%, rgba(125,42,232,0.22000000000000003) 45%, rgba(125,42,232,0) 100%);--od:22s"></div><div class="orb" style="left:-250px;top:450px;width:1000px;height:1000px;background:radial-gradient(closest-side, rgba(0,196,204,0.35000000000000003) 0%, rgba(0,196,204,0.15400000000000003) 45%, rgba(0,196,204,0) 100%);--od:28s"></div></div>
   <div data-b="0" class="fx fx-mask h1" style="position:absolute;left:140px;top:104px;width:1640px"><span class="w"><i>Hai</i></span> <span class="w"><i>phần,</i></span> <span class="w"><i>một</i></span> <span class="w"><i>câu</i></span> <span class="w"><i>chuyện</i></span></div><div data-b="0" class="fx fx-rise lead" style="position:absolute;left:140px;top:204px;width:1640px" >Từ thương hiệu toàn cầu đến chiến lược quảng cáo tại Việt Nam</div>
@@ -477,6 +482,7 @@ body.print #gpanel{display:none}
         <div data-b="4" class="fx fx-rise glass cons" style="position:absolute;left:1000px;top:766px;width:780px;height:134px" >Tài khoản Pro “share/edu” giá rẻ tràn lan làm rò rỉ doanh thu; chi phí AI cho người dùng free tăng</div>
     <div data-b="4" class="fx fx-fade src" style="" >Nguồn: CafeF / An ninh Tiền tệ (28/4/2026), Marketech APAC, Đời sống & Pháp luật (31/8/2026), khảo sát các trang bán tài khoản</div>
   </section>
+<section class="slide vid"><div class="vframe" data-noadv><video src="assets/canva-motion.mp4" controls playsinline preload="auto"></video></div></section>
 <section class="slide g-join"  data-game="join"><div class="bg"><div class="orb" style="left:900px;top:-60px;width:1200px;height:1200px;background:radial-gradient(closest-side, rgba(125,42,232,0.6875) 0%, rgba(125,42,232,0.30250000000000005) 45%, rgba(125,42,232,0) 100%);--od:22s"></div><div class="orb" style="left:-200px;top:500px;width:1000px;height:1000px;background:radial-gradient(closest-side, rgba(0,196,204,0.375) 0%, rgba(0,196,204,0.165) 45%, rgba(0,196,204,0) 100%);--od:28s"></div><div class="orb" style="left:-200px;top:-300px;width:800px;height:800px;background:radial-gradient(closest-side, rgba(90,50,250,0.375) 0%, rgba(90,50,250,0.165) 45%, rgba(90,50,250,0) 100%);--od:24s"></div></div>
     <div data-b="0" class="fx fx-rise g-tag" style="position:absolute;left:140px;top:100px" ><svg class="ic" stroke="currentColor" fill="none" stroke-width="2" viewBox="0 0 24 24" stroke-linecap="round" stroke-linejoin="round" color="#17134A" style="color:#17134A" height="26" width="26" xmlns="http://www.w3.org/2000/svg"><line x1="6" x2="10" y1="11" y2="11"></line><line x1="8" x2="8" y1="9" y2="13"></line><line x1="15" x2="15.01" y1="12" y2="12"></line><line x1="18" x2="18.01" y1="10" y2="10"></line><path d="M17.32 5H6.68a4 4 0 0 0-3.978 3.59c-.006.052-.01.101-.017.152C2.604 9.416 2 14.456 2 16a3 3 0 0 0 3 3c1 0 1.5-.5 2-1l1.414-1.414A2 2 0 0 1 9.828 16h4.344a2 2 0 0 1 1.414.586L17 18c.5.5 1 1 2 1a3 3 0 0 0 3-3c0-1.545-.604-6.584-.685-7.258-.007-.05-.011-.1-.017-.151A4 4 0 0 0 17.32 5z"></path></svg><span>Minigame</span></div>
     <div data-b="0" class="fx fx-mask g-title" style="position:absolute;left:140px;top:168px;width:1000px"><span class="w"><i>Ai</i></span> <span class="w"><i>nhanh</i></span> <span class="w"><i>tay</i></span> <span class="w"><i>hơn?</i></span></div>
@@ -581,7 +587,9 @@ const info = slides.map((s) => {
     groups.get(b).push(el);
   });
   const stg = +(s.dataset.st || 110);
-  for (const els of groups.values()) {
+  const merge = !s.dataset.game; // non-game slides: everything builds in on entry, groups staggered in order
+  let off = 0;
+  for (const [, els] of [...groups].sort((a, b) => a[0] - b[0])) {
     const norm = els.filter((e) => !e.classList.contains("selp"));
     const sel = els.filter((e) => e.classList.contains("selp"));
     norm.forEach((e, i) => { e._d = e.dataset.d !== undefined ? +e.dataset.d : i * stg; });
@@ -591,7 +599,9 @@ const info = slides.map((s) => {
       e._d = s0 + (e.classList.contains("selbox") ? 0 : e.classList.contains("handle") ? 380 + 70 * h++ : e.classList.contains("cursor") ? 140 : 980);
     });
     els.forEach((e) => { e._words = [...e.querySelectorAll(".w>i")]; e._counts = e.classList.contains("count") ? [e] : [...e.querySelectorAll(".count")]; });
+    if (merge) { els.forEach((e) => (e._d += off)); off = Math.max(off, ...els.map((e) => e._d)) + 260; }
   }
+  if (merge && groups.size) { const all = [...groups.values()].flat(); groups.clear(); groups.set(0, all); }
   const max = groups.size ? Math.max(...groups.keys()) : 0;
   return { groups, max };
 });
@@ -759,6 +769,18 @@ function ui() {
   document.getElementById("bar").style.width = (100 * done / tot) + "%";
   try { history.replaceState(null, "", "#" + (cur + 1)); } catch (e) {}
 }
+
+// ───────── video slides ─────────
+addEventListener("deck:slide", (e) => {
+  slides.forEach((s, k) => {
+    const v = s.querySelector("video"), f = s.querySelector("iframe");
+    if (k === e.detail.i) { if (v && body.classList.contains("started")) v.play().catch(() => {}); return; }
+    if (v) v.pause();
+    if (f) f.contentWindow.postMessage('{"event":"command","func":"pauseVideo","args":[]}', "*");
+  });
+});
+// clicking the YouTube iframe steals keyboard focus; hand it back so the clicker/arrow keys still advance
+addEventListener("blur", () => setTimeout(() => { const a = document.activeElement; if (a && a.tagName === "IFRAME") a.blur(); }, 0));
 
 // ───────── input ─────────
 let digits = "", digitT;
