@@ -85,9 +85,16 @@ img{display:block;-webkit-user-drag:none}
 .tk-t{font-size:32px;line-height:1.3;font-weight:800;margin:2px 0}
 .hint{position:absolute;left:0;right:0;bottom:46px;text-align:center;font-size:20px;color:rgba(255,255,255,.55);transition:opacity .6s ease}
 body.started .hint{opacity:0}
-.vid .vframe{position:absolute;left:160px;top:90px;width:1600px;height:900px;border-radius:24px;overflow:hidden;background:#000;box-shadow:0 30px 90px rgba(0,0,0,.5)}
-.vid video{display:block;width:100%;height:100%;border:0;background:#000}
-.vid .hint{bottom:24px}
+.slide.vid{background:#000}
+.vid .vframe{position:absolute;left:0;top:0;width:1920px;height:1080px;overflow:hidden;background:#000}
+.vid video{display:block;width:100%;height:100%;object-fit:cover;background:#000}
+/* Apple-style reveal: glowing card fades in small, holds a beat, then expands edge to edge */
+.vid.cur .vframe{animation:vin 2.1s cubic-bezier(.65,0,.35,1) both}
+@keyframes vin{
+  0%{opacity:0;transform:scale(.46);border-radius:72px;filter:blur(16px) brightness(.5);box-shadow:0 0 0 rgba(125,42,232,0)}
+  30%{opacity:1;transform:scale(.52);border-radius:72px;filter:blur(0) brightness(.8);box-shadow:0 0 160px rgba(125,42,232,.6)}
+  100%{opacity:1;transform:none;border-radius:0;filter:none;box-shadow:0 0 0 rgba(125,42,232,0)}
+}
 .ag-n{font-size:250px;line-height:.95;font-weight:800;letter-spacing:-.05em}
 .agenda-col{border-top:1.5px solid var(--line);padding-top:40px}
 .div-n{position:absolute;font-size:440px;line-height:1;font-weight:800;letter-spacing:-.05em;color:transparent;-webkit-text-stroke:3px rgba(255,255,255,.55)}
@@ -175,6 +182,7 @@ body.started .hint{opacity:0}
 #black.show{opacity:1}
 
 @media (prefers-reduced-motion: reduce){
+  .vid.cur .vframe{animation:none}
   .fx,.fx-mask .w>i,.slide{transform:none !important;transition:opacity .35s ease !important}
   .fx-mask .w>i{transition:none !important}
   .orb,.flt{animation:none !important}
@@ -319,7 +327,7 @@ body.print #gpanel{display:none}
   <div data-b="2" class="fx selp ctag" style="left:968px;top:952px">Business proposal</div>
   <div class="hint">Bấm chuột hoặc nhấn phím mũi tên để bắt đầu. Nhấn F để xem toàn màn hình.</div>
 </section>
-<section class="slide vid"><div class="vframe" data-noadv><video src="assets/tao-ra-lop.mp4" controls playsinline preload="auto"></video></div></section>
+<section class="slide vid"><div class="vframe"><video src="assets/tao-ra-lop.mp4" playsinline preload="auto"></video></div></section>
 <section class="slide cover"  ><div class="bg"><div class="orb" style="left:500px;top:-490px;width:1500px;height:1500px;background:radial-gradient(closest-side, rgba(125,42,232,0.75) 0%, rgba(125,42,232,0.33) 45%, rgba(125,42,232,0) 100%);--od:22s"></div><div class="orb" style="left:1200px;top:430px;width:1100px;height:1100px;background:radial-gradient(closest-side, rgba(0,196,204,0.5625) 0%, rgba(0,196,204,0.24750000000000003) 45%, rgba(0,196,204,0) 100%);--od:26s"></div><div class="orb" style="left:-380px;top:480px;width:1200px;height:1200px;background:radial-gradient(closest-side, rgba(90,50,250,0.625) 0%, rgba(90,50,250,0.275) 45%, rgba(90,50,250,0) 100%);--od:30s"></div></div>
   <img data-b="1" class="fx fx-sweep " data-a="ribbon" alt=""  style="position:absolute;left:600px;top:-90px;width:1400px">
   <div class="flt" style="position:absolute;left:660px;top:10px;width:250px;--fd:5.0s;--fdl:-2.0s"><img data-b="1" class="fx fx-pop " data-a="racket" alt=""  style="width:100%"></div><div class="flt" style="position:absolute;left:935px;top:80px;width:180px;--fd:5.5s;--fdl:-1.5s"><img data-b="1" class="fx fx-pop " data-a="gamepad" alt=""  style="width:100%"></div><div class="flt" style="position:absolute;left:1140px;top:110px;width:150px;--fd:5.0s;--fdl:0.0s"><img data-b="1" class="fx fx-pop " data-a="aa" alt=""  style="width:100%"></div>
@@ -495,7 +503,7 @@ body.print #gpanel{display:none}
         <div data-b="4" class="fx fx-rise glass cons" style="position:absolute;left:1000px;top:766px;width:780px;height:134px" >Tài khoản Pro “share/edu” giá rẻ tràn lan làm rò rỉ doanh thu; chi phí AI cho người dùng free tăng</div>
     <div data-b="4" class="fx fx-fade src" style="" >Nguồn: CafeF / An ninh Tiền tệ (28/4/2026), Marketech APAC, Đời sống & Pháp luật (31/8/2026), khảo sát các trang bán tài khoản</div>
   </section>
-<section class="slide vid"><div class="vframe" data-noadv><video src="assets/canva-motion.mp4" controls playsinline preload="auto"></video></div></section>
+<section class="slide vid"><div class="vframe"><video src="assets/canva-motion.mp4" playsinline preload="auto"></video></div></section>
 <section class="slide g-join"  data-game="join"><div class="bg"><div class="orb" style="left:900px;top:-60px;width:1200px;height:1200px;background:radial-gradient(closest-side, rgba(125,42,232,0.6875) 0%, rgba(125,42,232,0.30250000000000005) 45%, rgba(125,42,232,0) 100%);--od:22s"></div><div class="orb" style="left:-200px;top:500px;width:1000px;height:1000px;background:radial-gradient(closest-side, rgba(0,196,204,0.375) 0%, rgba(0,196,204,0.165) 45%, rgba(0,196,204,0) 100%);--od:28s"></div><div class="orb" style="left:-200px;top:-300px;width:800px;height:800px;background:radial-gradient(closest-side, rgba(90,50,250,0.375) 0%, rgba(90,50,250,0.165) 45%, rgba(90,50,250,0) 100%);--od:24s"></div></div>
     <div data-b="0" class="fx fx-rise g-tag" style="position:absolute;left:140px;top:100px" ><svg class="ic" stroke="currentColor" fill="none" stroke-width="2" viewBox="0 0 24 24" stroke-linecap="round" stroke-linejoin="round" color="#17134A" style="color:#17134A" height="26" width="26" xmlns="http://www.w3.org/2000/svg"><line x1="6" x2="10" y1="11" y2="11"></line><line x1="8" x2="8" y1="9" y2="13"></line><line x1="15" x2="15.01" y1="12" y2="12"></line><line x1="18" x2="18.01" y1="10" y2="10"></line><path d="M17.32 5H6.68a4 4 0 0 0-3.978 3.59c-.006.052-.01.101-.017.152C2.604 9.416 2 14.456 2 16a3 3 0 0 0 3 3c1 0 1.5-.5 2-1l1.414-1.414A2 2 0 0 1 9.828 16h4.344a2 2 0 0 1 1.414.586L17 18c.5.5 1 1 2 1a3 3 0 0 0 3-3c0-1.545-.604-6.584-.685-7.258-.007-.05-.011-.1-.017-.151A4 4 0 0 0 17.32 5z"></path></svg><span>Minigame</span></div>
     <div data-b="0" class="fx fx-mask g-title" style="position:absolute;left:140px;top:168px;width:1000px"><span class="w"><i>Ai</i></span> <span class="w"><i>nhanh</i></span> <span class="w"><i>tay</i></span> <span class="w"><i>hơn?</i></span></div>
@@ -784,11 +792,26 @@ function ui() {
 }
 
 // ───────── video slides ─────────
+function fadeVol(v, to, ms, done) {
+  const from = v.volume, t0 = performance.now(), id = (v._fid = (v._fid || 0) + 1);
+  const tick = (t) => {
+    if (v._fid !== id) return;
+    const p = Math.min(1, Math.max(0, (t - t0) / ms)); // rAF time can precede t0
+    v.volume = from + (to - from) * p;
+    if (p < 1) requestAnimationFrame(tick); else if (done) done();
+  };
+  requestAnimationFrame(tick);
+}
 addEventListener("deck:slide", (e) => {
   slides.forEach((s, k) => {
     const v = s.querySelector("video");
-    if (k === e.detail.i) { if (v && body.classList.contains("started")) v.play().catch(() => {}); return; }
-    if (v) v.pause();
+    if (!v) return;
+    clearTimeout(v._t);
+    if (k === e.detail.i) {
+      // restart from the top; playback + sound swell in as the frame starts expanding
+      v._fid = (v._fid || 0) + 1; v.pause(); v.currentTime = 0; v.volume = 0;
+      if (body.classList.contains("started")) v._t = setTimeout(() => v.play().then(() => (cur === k ? fadeVol(v, 1, 1400) : v.pause())).catch(() => {}), RM ? 0 : 620);
+    } else if (!v.paused) fadeVol(v, 0, 650, () => v.pause());
   });
 });
 
